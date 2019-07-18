@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Statistics">
+	<!-- UserStatistics -->
+	<resultMap type="UserStatistics" id="userStatisticsResultSet">
+		<result property="femailCount" column="FEMAIL_COUNT"/>
+		<result property="mailCount" column="MAIL_COUNT"/>
+		<result property="ageGroup" column="AGE_GROUP"/>
+		<result property="ageCount" column="AGE_COUNT"/>
+	</resultMap>
+	
+	<!-- TravelStatistics -->
+	<resultMap type="TravelStatistics" id="travelStatisticsResultSet">
+		<result property="rownum" column="ROWNUM"/>
+		<result property="year" column="YEAR"/>
+		<result property="month" column="MONTH"/>
+		<result property="countryNameKo" column="COUNTRY_NAME_KO"/>
+		<result property="countryNameEn" column="COUNTRY_NAME_EN"/>
+		<result property="countryCount" column="COUNTRY_COUNT"/>
+		<result property="tagName" column="TAG_NAME"/>
+		<result property="tagCount" column="TAG_COUNT"/>
+	</resultMap>
+	
+	<!-- RevenueStatistics -->
+	<resultMap type="RevenueStatistics" id="revenueStatisticsResultSet">
+		<result property="year" column="YEAR"/>
+		<result property="m1" column="M1"/>
+		<result property="m2" column="M2"/>
+		<result property="m3" column="M3"/>
+		<result property="m4" column="M4"/>
+		<result property="m5" column="M5"/>
+		<result property="m6" column="M6"/>
+		<result property="m7" column="M7"/>
+		<result property="m8" column="M8"/>
+		<result property="m9" column="M9"/>
+		<result property="m10" column="M10"/>
+		<result property="m11" column="M11"/>
+		<result property="m12" column="M12"/>
+	</resultMap>
+	
+	<!-- 회원 성비 조회 -->
+	<select id="genderStatistics" resultMap="userStatisticsResultSet">
+		SELECT COUNT(DECODE(GENDER, 'F', 0)) AS FEMAIL_COUNT, COUNT(DECODE(GENDER, 'M', 0)) AS MAIL_COUNT
+		FROM MEMBER M
+		WHERE ENROLL_STATUS = 'Y'
+	</select>
+	
+	<!-- 회원 연령대 조회 -->
+	<select id="ageGroupStatistics" resultMap="userStatisticsResultSet">
+		SELECT DECODE(AGE_GROUP, NULL, '알 수 없음', AGE_GROUP) AGE_GROUP, COUNT(*) AGE_COUNT
+		FROM (SELECT FLOOR((TO_CHAR(SYSDATE, 'YYYY') - SUBSTR(BIRTHDAY, 1, 4)) / 10) * 10 AGE_GROUP
+		        FROM MEMBER
+		        WHERE ENROLL_STATUS = 'Y'
+		        AND MEMBER_TYPE = 'M')
+		GROUP BY AGE_GROUP
+		ORDER BY AGE_GROUP
+	</select>
+	
+	<!-- 선호 여행나라 조회 -->
+	<select id="travelCountryStatistics" resultMap="travelStatisticsResultSet">
+		SELECT ROWNUM, COUNTRY_NAME_EN, COUNTRY_NAME_KO, COUNTRY_COUNT
+		FROM (
+		SELECT DISTINCT DENSE_RANK() OVER(ORDER BY COUNTRY_COUNT DESC) AS RANK, COU.COUNTRY_NAME_EN, COU.COUNTRY_NAME_KO, COUNTRY_COUNT
+				        FROM TRAVEL T
+				        JOIN TRV_CITY TCT ON (T.TRV_ID = TCT.TRV_ID)
+				        JOIN CITY CI ON (CI.CITY_ID = TCT.CITY_ID)
+				        JOIN COUNTRY COU ON (COU.COUNTRY_ID = CI.COUNTRY_ID)
+				        JOIN (SELECT DISTINCT COU.COUNTRY_NAME_EN, COU.COUNTRY_NAME_KO, COUNT(*) AS COUNTRY_COUNT
+				                FROM TRAVEL T
+				                JOIN TRV_CITY TCT ON (T.TRV_ID = TCT.TRV_ID)
+				                JOIN CITY CI ON (CI.CITY_ID = TCT.CITY_ID)
+				                JOIN COUNTRY COU ON (COU.COUNTRY_ID = CI.COUNTRY_ID)
+				                GROUP BY COU.COUNTRY_NAME_EN, COU.COUNTRY_NAME_KO
+				                ORDER BY COUNTRY_COUNT DESC) CC ON (CC.COUNTRY_NAME_EN = COU.COUNTRY_NAME_EN)
+				        WHERE T.COMPLETE_DATE IS NOT NULL
+				        AND T.STATUS = 'Y'
+				        AND TO_CHAR(T.START_DATE, 'YYYY-MM') = #{ month }
+				        ORDER BY RANK, COU.COUNTRY_NAME_KO
+		)
+		WHERE ROWNUM <![CDATA[ <= ]]> 10
+	</select>
+	
+	<!-- 선호 여행태그 조회 -->
+	<select id="travelTagStatistics" resultMap="travelStatisticsResultSet">
+		SELECT ROWNUM, TAG_NAME, TAG_COUNT
+		FROM (
+		SELECT DISTINCT DENSE_RANK() OVER(ORDER BY TAG_COUNT DESC) AS RANK, CC.TAG_NAME, TAG_COUNT
+				        FROM TRAVEL T
+				        JOIN TRV_TAG TT ON (T.TRV_ID = TT.TRV_ID)
+                        JOIN TAG TA ON (TT.TAG_ID = TA.TAG_ID)
+				        JOIN (SELECT TA.TAG_NAME, COUNT(*) AS TAG_COUNT
+                            FROM TRAVEL T
+                            JOIN TRV_TAG TT ON (T.TRV_ID = TT.TRV_ID)
+                            JOIN TAG TA ON (TT.TAG_ID = TA.TAG_ID)
+                            GROUP BY TA.TAG_NAME
+                            ORDER BY TAG_COUNT DESC) CC ON (CC.TAG_NAME = TA.TAG_NAME)
+				        WHERE T.COMPLETE_DATE IS NOT NULL
+				        AND T.STATUS = 'Y'
+				        AND TO_CHAR(T.START_DATE, 'YYYY-MM') = #{ month }
+				        ORDER BY RANK, CC.TAG_NAME
+						)
+		WHERE ROWNUM <![CDATA[ <= ]]> 10
+	</select>
+	
+	<!-- 올해 월별 결제금액 조회 -->
+	<select id="paymentStatistics" resultMap="revenueStatisticsResultSet">
+		SELECT TO_CHAR(TO_CHAR(SYSDATE, 'YYYY')) YEAR, M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12
+		FROM (
+		        SELECT  DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '01'), SUM(PAY_AMOUNT), 0) M1,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '02'), SUM(PAY_AMOUNT), 0) M2,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '03'), SUM(PAY_AMOUNT), 0) M3,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '04'), SUM(PAY_AMOUNT), 0) M4,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '05'), SUM(PAY_AMOUNT), 0) M5,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '06'), SUM(PAY_AMOUNT), 0) M6,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '07'), SUM(PAY_AMOUNT), 0) M7,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '08'), SUM(PAY_AMOUNT), 0) M8,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '09'), SUM(PAY_AMOUNT), 0) M9,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '10'), SUM(PAY_AMOUNT), 0) M10,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '11'), SUM(PAY_AMOUNT), 0) M11,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '12'), SUM(PAY_AMOUNT), 0) M12
+		        FROM PAYMENT P
+		        GROUP BY TO_CHAR(PAYMENT_DATE, 'YYYY-MM')
+		    )
+	</select>
+	
+	<!-- 검색년도 월별 결제금액 조회 -->
+	<select id="paymentYearSearch" resultMap="revenueStatisticsResultSet">
+		SELECT TO_CHAR(#{ year }) YEAR, M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12
+		FROM (
+		        SELECT  DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '01'), SUM(PAY_AMOUNT), 0) M1,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '02'), SUM(PAY_AMOUNT), 0) M2,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '03'), SUM(PAY_AMOUNT), 0) M3,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '04'), SUM(PAY_AMOUNT), 0) M4,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '05'), SUM(PAY_AMOUNT), 0) M5,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '06'), SUM(PAY_AMOUNT), 0) M6,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '07'), SUM(PAY_AMOUNT), 0) M7,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '08'), SUM(PAY_AMOUNT), 0) M8,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '09'), SUM(PAY_AMOUNT), 0) M9,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '10'), SUM(PAY_AMOUNT), 0) M10,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '11'), SUM(PAY_AMOUNT), 0) M11,
+		                DECODE(TO_CHAR(PAYMENT_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '12'), SUM(PAY_AMOUNT), 0) M12
+		        FROM PAYMENT P
+		        GROUP BY TO_CHAR(PAYMENT_DATE, 'YYYY-MM')
+		    )
+	</select>
+	
+	<!-- 올해 월별 수익금 환급금액 조회 -->
+	<select id="rebateStatistics" resultMap="revenueStatisticsResultSet">
+		SELECT TO_CHAR(TO_CHAR(SYSDATE, 'YYYY')) YEAR, M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12
+		FROM (
+		        SELECT  DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '01'), SUM(PAY_AMOUNT), 0) m1,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '02'), SUM(PAY_AMOUNT), 0) m2,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '03'), SUM(PAY_AMOUNT), 0) m3,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '04'), SUM(PAY_AMOUNT), 0) m4,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '05'), SUM(PAY_AMOUNT), 0) m5,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '06'), SUM(PAY_AMOUNT), 0) m6,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '07'), SUM(PAY_AMOUNT), 0) m7,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '08'), SUM(PAY_AMOUNT), 0) m8,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '09'), SUM(PAY_AMOUNT), 0) m9,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '10'), SUM(PAY_AMOUNT), 0) m10,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '11'), SUM(PAY_AMOUNT), 0) m11,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(TO_CHAR(SYSDATE, 'YYYY') || '-' || '12'), SUM(PAY_AMOUNT), 0) m12
+		        FROM REBATE R
+		        GROUP BY TO_CHAR(PAY_DATE, 'YYYY-MM')
+		    )
+	</select>
+	
+	<!-- 검색년도 월별 환급액 조회 -->
+	<select id="rebateYearSearch" resultMap="revenueStatisticsResultSet">
+		SELECT TO_CHAR(#{ year }) YEAR, M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12
+		FROM (
+		        SELECT  DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '01'), SUM(PAY_AMOUNT), 0) M1,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '02'), SUM(PAY_AMOUNT), 0) M2,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '03'), SUM(PAY_AMOUNT), 0) M3,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '04'), SUM(PAY_AMOUNT), 0) M4,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '05'), SUM(PAY_AMOUNT), 0) M5,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '06'), SUM(PAY_AMOUNT), 0) M6,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '07'), SUM(PAY_AMOUNT), 0) M7,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '08'), SUM(PAY_AMOUNT), 0) M8,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '09'), SUM(PAY_AMOUNT), 0) M9,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '10'), SUM(PAY_AMOUNT), 0) M10,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '11'), SUM(PAY_AMOUNT), 0) M11,
+		                DECODE(TO_CHAR(PAY_DATE, 'YYYY-MM'), TO_CHAR(#{ year } || '-' || '12'), SUM(PAY_AMOUNT), 0) M12
+		        FROM REBATE R
+		        GROUP BY TO_CHAR(PAY_DATE, 'YYYY-MM')
+		    )
+	</select>
+	
+</mapper>

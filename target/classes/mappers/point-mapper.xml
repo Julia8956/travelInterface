@@ -1,0 +1,874 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Payment">
+	<resultMap type="Payment" id="paymentResultSet">
+		<id property="paymentId" column="PAYMENT_ID"/>
+		
+		<result property="tid" column="TID"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="payAmount" column="PAY_AMOUNT"/>
+		<result property="paymentDate" column="PAYMENT_DATE"/>
+	</resultMap>
+	<resultMap type="ReservePoint" id="reserveResultSet">
+		<id property="pointId" column="POINT_ID"/>
+		
+		<result property="reservePoint" column="RESERVE_POINT"/>
+		<result property="reserveDate" column="RESERVE_DATE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="reserveType" column="RESERVE_TYPE"/>
+		<result property="reviewId" column="REVIEW_ID"/>
+		<result property="spotReviewId" column="SPOT_REVIEW_ID"/>
+		<result property="trvId" column="TRV_ID"/>
+	</resultMap>
+	<resultMap type="UsePoint" id="useResultSet">
+		<id property="pointId" column="POINT_ID"/>
+		
+		<result property="usePoint" column="USE_POINT"/>
+		<result property="useDate" column="USE_DATE"/>
+		<result property="useType" column="USE_TYPE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="trvId" column="TRV_ID"/>
+		<result property="requestId" column="REQUEST_ID"/>
+	</resultMap>
+	<resultMap type="UsePoint" id="useRefundResultSet">
+		<id property="pointId" column="POINT_ID"/>
+		
+		<result property="usePoint" column="USE_POINT"/>
+		<result property="useDate" column="USE_DATE"/>
+		<result property="useType" column="USE_TYPE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="trvId" column="TRV_ID"/>
+		<result property="requestId" column="REQUEST_ID"/>
+		<association property="refund" resultMap="refundResultSet" columnPrefix="R_"></association>
+	</resultMap>
+	<resultMap type="Refund" id="refundResultSet">
+		<id property="refundId" column="REFUND_ID"/>
+		
+		<result property="refundReason" column="REFUND_REASON"/>
+		<result property="applyDate" column="APPLY_DATE"/>
+		<result property="processedDate" column="PROCESSED_DATE"/>
+		<result property="refundStatus" column="REFUND_STATUS"/>
+		<result property="pointId" column="POINT_ID"/>
+	</resultMap>
+	<resultMap type="Proceeds" id="proceedsResultSet">
+		<id property="proceedsId" column="PROCEEDS_ID"/>
+		<result property="proceeds" column="PROCEEDS"/>
+		<result property="proceedsDate" column="PROCEEDS_DATE"/>
+		<result property="proceedsType" column="PROCEEDS_TYPE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="trvId" column="TRV_ID"/>
+		<result property="ptcpId" column="PTCP_ID"/>
+	</resultMap>
+	<resultMap type="Rebate" id="rebateResultSet">
+		<id property="rebateId" column="REBATE_ID"/>
+		<result property="applyDate" column="APPLY_DATE"/>
+		<result property="payAmount" column="PAY_AMOUNT"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="payDate" column="PAY_DATE"/>
+		<result property="rebateStatus" column="REBATE_STATUS"/>
+	</resultMap>
+	<resultMap type="Payment" id="paymentMemberResultSet">
+		<id property="paymentId" column="PAYMENT_ID"/>
+		
+		<result property="tid" column="TID"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="payAmount" column="PAY_AMOUNT"/>
+		<result property="paymentDate" column="PAYMENT_DATE"/>
+		<result property="email" column="EMAIL"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="birthday" column="BIRTHDAY"/>
+		<result property="accCode" column="ACC_CODE"/>
+		<result property="accNumber" column="ACC_NUMBER"/>
+		<result property="enrollStatus" column="ENROLL_STATUS"/>
+		<result property="phone" column="PHONE"/>
+		<result property="userPoint" column="USER_POINT"/>
+		<result property="userProceeds" column="USER_PROCEEDS"/>
+	</resultMap>
+	<resultMap type="Refund" id="refundUseMemberTrvTrvRequestResultSet">
+		<id property="refundId" column="REFUND_ID"/>
+		
+		<result property="refundReason" column="REFUND_REASON"/>
+		<result property="applyDate" column="APPLY_DATE"/>
+		<result property="processedDate" column="PROCESSED_DATE"/>
+		<result property="refundStatus" column="REFUND_STATUS"/>
+		<result property="pointId" column="POINT_ID"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="email" column="EMAIL"/>
+		<result property="useType" column="USE_TYPE"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="useDate" column="USE_DATE"/>
+		<result property="trvId" column="TRV_ID"/>
+		<result property="requestId" column="REQUEST_ID"/>
+		<result property="usePoint" column="USE_POINT"/>
+		<result property="trvTitle" column="TRV_TITLE"/>
+		<result property="planId" column="PLAN_ID"/>
+		<result property="planTitle" column="PLAN_TITLE"/>
+	</resultMap>
+	<resultMap type="Proceeds" id="PointPlanRequestParticipationMemberTrvResultSet">
+		<id property="proceedsId" column="PROCEEDS_ID"/>
+		<result property="proceeds" column="PROCEEDS"/>
+		<result property="proceedsDate" column="PROCEEDS_DATE"/>
+		<result property="proceedsType" column="PROCEEDS_TYPE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="trvId" column="TRV_ID"/>
+		<result property="ptcpId" column="PTCP_ID"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="email" column="EMAIL"/>
+		
+		<association property="travel" resultMap="trvMemberResult" columnPrefix="T_"></association>
+		<association property="travelRequest" resultMap="trvRequestResult" columnPrefix="TRVR_"></association>
+		<association property="travelRequestPlan" resultMap="trvPlanResult" columnPrefix="TRVP_"></association>
+	</resultMap>
+	<resultMap type="Rebate" id="rebateMemberResultSet">
+		<id property="rebateId" column="REBATE_ID"/>
+		<result property="applyDate" column="APPLY_DATE"/>
+		<result property="payAmount" column="PAY_AMOUNT"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="payDate" column="PAY_DATE"/>
+		<result property="rebateStatus" column="REBATE_STATUS"/>
+		<association property="member" resultMap="memberResult" columnPrefix="M_"></association>
+	</resultMap>
+	<resultMap type="Travel" id="trvMemberResult">
+		<id property="trvId" column="TRV_ID"/>
+		<result property="trvTitle" column="TRV_TITLE" />
+		<result property="memberId" column="MEMBER_ID" />
+	</resultMap>
+	<resultMap type="TravelRequest" id="trvRequestResult">
+		<id property="requestId" column="REQUEST_ID"/>
+		<result property="requestTitle" column="REQUEST_TITLE"/>
+	</resultMap>
+	<resultMap type="TravelRequestPlan" id="trvPlanResult">
+		<id property="planId" column="PLAN_ID"/>
+		<result property="ptcpId" column="PTCP_ID"/>
+		<result property="planTitle" column="PLAN_TITLE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+	</resultMap>
+	<resultMap type="Member" id="memberResult">
+		<id property="memberId" column="MEMBER_ID"/>
+		<result property="email" column="EMAIL"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="accCode" column="ACC_CODE"/>
+		<result property="accNumber" column="ACC_NUMBER"/>
+		<result property="userPoint" column="USER_POINT"/>
+		<result property="userProceeds" column="USER_PROCEEDS"/>
+	</resultMap>
+	<resultMap type="java.util.HashMap" id="downRebatesResultMap">
+		<result property="applyDate" column="APPLY_DATE"/>
+		<result property="payAmount" column="PAY_AMOUNT"/>
+		
+		<result property="email" column="EMAIL"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="accCode" column="ACC_CODE"/>
+		<result property="accNumber" column="ACC_NUMBER"/>
+	</resultMap>
+	<!-- 포인트 충전 -->
+	<insert id="insertPay" parameterType="Payment">
+		INSERT INTO PAYMENT
+		VALUES(PAYMENT_SEQ.NEXTVAL, #{tid}, #{memberId}, #{payAmount}, #{paymentDate})
+	</insert>	
+	<!-- 포인트 충전 리스트 전체 카운터 -->
+	<select id="getChargeListCount" parameterType="Payment" resultType="_int">
+		SELECT COUNT(*)
+		FROM PAYMENT
+		WHERE MEMBER_ID=#{memberId}
+		<choose>
+			<when test="month != null and month != 0">
+				AND EXTRACT(MONTH FROM PAYMENT_DATE)=#{month}
+			</when>
+		</choose>
+	</select>
+	<!-- 포인트 지급 리스트 전체 카운터 -->
+	<select id="getReceiveListCount" parameterType="ReservePoint" resultType="_int">
+		SELECT COUNT(*)
+		FROM RESERVE_POINT
+		WHERE MEMBER_ID=#{memberId}
+		<choose>
+			<when test="month != null and month != 0">
+				AND EXTRACT(MONTH FROM RESERVE_DATE)=#{month}
+			</when>
+		</choose>
+	</select>
+	<!-- 포인트 사용 리스트 전체 카운터 -->
+	<select id="getUseListCount" parameterType="UsePoint" resultType="_int">
+		SELECT COUNT(*)
+		FROM (
+			SELECT UP.POINT_ID, USE_POINT, USE_DATE, USE_TYPE, UP.MEMBER_ID, TRV_ID, REQUEST_ID, 
+			R.REFUND_ID AS R_REFUND_ID, R.REFUND_REASON AS R_REFUND_REASON, R.APPLY_DATE AS R_APPLY_DATE, R.PROCESSED_DATE AS R_PROCESSED_DATE, R.REFUND_STATUS AS R_REFUND_STATUS, R.POINT_ID AS R_POINT_ID
+			FROM USE_POINT UP
+			LEFT JOIN REFUND R ON(UP.POINT_ID=R.POINT_ID)
+			WHERE MEMBER_ID=#{memberId}
+			<choose>
+				<when test="month != null and month != 0">
+					AND EXTRACT(MONTH FROM USE_DATE)=#{month}
+				</when>
+			</choose>
+			ORDER BY USE_DATE DESC
+		)
+	</select>
+	<!-- 포인트 충전리스트 전체 조회 -->
+	<select id="selectChargeList" parameterType="Payment" resultMap="paymentResultSet">
+		SELECT *
+		FROM PAYMENT
+		WHERE MEMBER_ID=#{memberId}
+		<choose>
+			<when test="month != null and month != 0">
+				AND EXTRACT(MONTH FROM PAYMENT_DATE)=#{month}
+			</when>
+		</choose>
+		ORDER BY PAYMENT_DATE DESC
+	</select>
+	<!-- 포인트 지급리스트 전체 조회 -->
+	<select id="selectReceiveList" parameterType="ReservePoint" resultMap="reserveResultSet">
+		SELECT *
+		FROM RESERVE_POINT
+		WHERE MEMBER_ID=#{memberId}
+		<choose>
+			<when test="month != null and month != 0">
+				AND EXTRACT(MONTH FROM RESERVE_DATE)=#{month}
+			</when>
+		</choose>
+		ORDER BY RESERVE_DATE DESC
+	</select>
+	<!-- 포인트 사용리스트 전체 조회 -->
+	<select id="selectUseList" parameterType="UsePoint" resultMap="useRefundResultSet">
+		SELECT UP.POINT_ID, USE_POINT, USE_DATE, USE_TYPE, UP.MEMBER_ID, TRV_ID, REQUEST_ID, 
+		R.REFUND_ID AS R_REFUND_ID, R.REFUND_REASON AS R_REFUND_REASON, R.APPLY_DATE AS R_APPLY_DATE, R.PROCESSED_DATE AS R_PROCESSED_DATE, R.REFUND_STATUS AS R_REFUND_STATUS, R.POINT_ID AS R_POINT_ID
+		FROM USE_POINT UP
+		LEFT JOIN REFUND R ON(UP.POINT_ID=R.POINT_ID)
+		WHERE MEMBER_ID=#{memberId}
+		<choose>
+			<when test="month != null and month != 0">
+				AND EXTRACT(MONTH FROM USE_DATE)=#{month}
+			</when>
+		</choose>
+		ORDER BY USE_DATE DESC
+	</select>
+	<!-- 포인트 자동으로 적립하기 -->
+	<insert id="insertReservePoint" parameterType="ReservePoint">
+		INSERT INTO RESERVE_POINT
+		VALUES( RESERVE_POINT_SEQ.NEXTVAL, #{reservePoint}, #{reserveDate}, #{memberId}, #{reserveType},
+		<choose>
+			<when test="reviewId != 0">#{reviewId}, null, null</when>
+			<when test="spotReviewId != 0">null, #{spotReviewId}, null </when>
+			<when test="trvId != 0">null, null, #{trvId}</when>
+		</choose> )
+	</insert>
+	<!-- 성공시 멤버 누적포인트 증가 -->
+	<update id="updateUserPointAuto" parameterType="ReservePoint">
+		UPDATE MEMBER
+		SET USER_POINT = USER_POINT + #{reservePoint}
+		WHERE MEMBER_ID = #{memberId}
+	</update>
+	<!-- 포인트 환불신청하기-> 환불 내역에 인서트 -->
+	<insert id="insertRefund" parameterType="Refund">
+		INSERT INTO REFUND
+		VALUES( 
+			REFUND_SEQ.NEXTVAL, #{refundReason}, SYSDATE, NULL, #{refundStatus}, #{pointId}
+		)
+	</insert>
+	<!-- 해당 reviewId로 trvId 조회해오기 -->
+	<select id="selectOneTrv" resultType="_int">
+		SELECT TRV_ID
+		FROM TOUR_REVIEW
+		WHERE REVIEW_ID = #{reviewId}
+	</select>
+	<!-- Member 테이블의 userPoint조회해오기 -->
+	<select id="selectUserPoint" parameterType="_int" resultType="_int">
+		SELECT USER_POINT
+		FROM MEMBER
+		WHERE MEMBER_ID = #{memberId}
+	</select>
+	<!-- Member 테이블의 userProceeds조회해오기 -->
+	<select id="selectUserProceeds" parameterType="_int" resultType="_int">
+		SELECT USER_PROCEEDS
+		FROM MEMBER
+		WHERE MEMBER_ID = #{memberId}
+	</select>
+	<!-- 포인트 사용 후 포인트 사용내역에 insert -->
+	<insert id="insertPointUse" parameterType="UsePoint">
+		INSERT INTO USE_POINT
+		VALUES(
+			USE_POINT_SEQ.NEXTVAL, #{usePoint}, SYSDATE, #{useType}, #{memberId}, 
+			<choose>
+				<when test="trvId != 0">#{trvId}, null</when>
+				<when test="requestId != 0">null, #{requestId}</when>
+			</choose>)
+	</insert>
+	<!-- 포인트 충전시 멤버 테이블의 누적포인트 증가 -->
+	<update id="updateUserPoint" parameterType="Payment">
+		UPDATE MEMBER
+		SET USER_POINT = USER_POINT + #{payAmount}
+		WHERE MEMBER_ID = #{memberId}
+	</update>
+	<!-- 수익금 여행글에 따른 memberId 찾기 -->
+	<select id="selectReceiverTrvMemberId" resultType="_int">
+		SELECT MEMBER_ID
+		FROM TRAVEL
+		WHERE TRV_ID = #{trvId}
+	</select>
+	<!-- 수익금 의뢰글에 따른 memberId 찾기 -->
+	<select id="selectReceiverRequestMemberId" resultType="_int">
+		SELECT MEMBER_ID
+		FROM PARTICIPATION P
+		JOIN TRV_PLAN TP ON(TP.PLAN_ID=P.PLAN_ID)
+		WHERE PTCP_ID=#{ptcpId}
+	</select>
+	<!-- 누적수익금을 위한 기존 수익금 조회 -->
+	<select id="selectOneProceeds" parameterType="Proceeds" resultMap="proceedsResultSet">
+		SELECT *
+		FROM PROCEEDS
+		<choose>
+			<when test="trvId != 0">
+				WHERE TRV_ID=#{trvId} 
+			</when>
+			<when test="ptcpId != 0">
+				WHERE PTCP_ID=#{ptcpId}
+			</when>
+		</choose>
+	</select>
+	<!-- 성공시 수익금발생내역에 인서트 -->
+	<insert id="insertReceiverProceeds" parameterType="Proceeds">
+		INSERT INTO PROCEEDS
+		VALUES(
+			PROCEEDS_SEQ.NEXTVAL, #{proceeds}, SYSDATE, #{proceedsType}, #{memberId},
+			<choose>
+				<when test="trvId != 0">#{trvId}, null</when>
+				<when test="ptcpId != 0">null, #{ptcpId}</when>
+			</choose>)
+	</insert>
+	<!-- 판매자의 기존 수익금 내역이 존재할 시 update만 -->
+	<update id="updateReceiverProceeds" parameterType="Proceeds">
+		UPDATE PROCEEDS
+		SET PROCEEDS = #{proceeds}
+		WHERE PROCEEDS_ID = #{proceedsId}
+	</update>
+	<!-- 성공시 member 테이블의 누적 포인트 차감(memberId) -->
+	<update id="updateUserDeductionPoint" parameterType="UsePoint">
+		UPDATE MEMBER
+		SET USER_POINT = USER_POINT - #{usePoint}
+		WHERE MEMBER_ID = #{memberId}
+	</update>
+	<!-- 성공시 member 테이블의 누적 수익금 추가 -->
+	<update id="updateUserIncreaseProceeds" parameterType="Proceeds">
+		UPDATE MEMBER
+		SET USER_PROCEEDS = USER_PROCEEDS + #{proceeds}
+		WHERE MEMBER_ID = #{memberId}
+	</update>
+	<!-- 수익금 달성내역 전체 리스트 카운트 -->
+	<select id="getProceedsListCount" parameterType="Proceeds" resultType="_int">
+		SELECT COUNT(*)
+		FROM (
+			SELECT P1.PROCEEDS_ID, P1.PROCEEDS, P1.PROCEEDS_DATE, P1.PROCEEDS_TYPE, P1.MEMBER_ID, P1.TRV_ID, P1.PTCP_ID
+			FROM PROCEEDS P1
+			WHERE MEMBER_ID=#{memberId}
+			<choose>
+				<when test="month != null and month != 0">
+					AND EXTRACT(MONTH FROM PROCEEDS_DATE)=#{month}
+				</when>
+			</choose>
+			AND PROCEEDS_ID = (
+			    SELECT MAX(PROCEEDS_ID) FROM PROCEEDS P2 WHERE P1.TRV_ID=P2.TRV_ID OR P1.PTCP_ID = P2.PTCP_ID
+			)
+			ORDER BY PROCEEDS_DATE DESC
+		)
+	</select>
+	<!-- 수익금 달성내역 가져오기 -->
+	<select id="selectAllProceeds" parameterType="Proceeds" resultMap="proceedsResultSet">
+		SELECT P1.PROCEEDS_ID, P1.PROCEEDS, P1.PROCEEDS_DATE, P1.PROCEEDS_TYPE, P1.MEMBER_ID, P1.TRV_ID, P1.PTCP_ID
+		FROM PROCEEDS P1
+		WHERE MEMBER_ID=#{memberId}
+		<choose>
+			<when test="month != null and month != 0">
+				AND EXTRACT(MONTH FROM PROCEEDS_DATE)=#{month}
+			</when>
+		</choose>
+		AND PROCEEDS_ID = (
+		    SELECT MAX(PROCEEDS_ID) FROM PROCEEDS P2 WHERE P1.TRV_ID=P2.TRV_ID OR P1.PTCP_ID = P2.PTCP_ID
+		)
+		ORDER BY PROCEEDS_DATE DESC
+	</select>
+	<!-- 환급 신청내역 전체 리스트 카운트 -->
+	<select id="getRebateListCount" parameterType="Rebate" resultType="_int">
+		SELECT COUNT(*)
+		FROM REBATE
+		WHERE MEMBER_ID=#{memberId}
+		<choose>
+			<when test="month != null and month != 0">
+				AND EXTRACT(MONTH FROM APPLY_DATE)=#{month}
+			</when>
+		</choose>
+	</select>
+	<!-- 환급 신청내역 전체 리스트 조회 -->
+	<select id="selectAllRebate" parameterType="Rebate" resultMap="rebateResultSet">
+		SELECT *
+		FROM REBATE
+		WHERE MEMBER_ID=#{memberId}
+		<choose>
+			<when test="month != null and month != 0">
+				AND EXTRACT(MONTH FROM APPLY_DATE)=#{month}
+			</when>
+		</choose>
+		ORDER BY APPLY_DATE DESC
+	</select>
+	<!-- 환급 신청시 -->
+	<insert id="insertRebate" parameterType="Rebate">
+		INSERT INTO REBATE
+		VALUES(
+			REBATE_SEQ.NEXTVAL, SYSDATE, #{payAmount}, #{memberId}, NULL, #{rebateStatus}		
+		)
+	</insert>
+	<!-- 신청 성공시 수익금 차감 -->
+	<update id="updateDeductionRebate" parameterType="Rebate">
+		UPDATE MEMBER
+		SET USER_PROCEEDS = USER_PROCEEDS-#{payAmount}
+		WHERE MEMBER_ID = #{memberId}
+	</update>
+	<!-- 관리자 - 총 결제 내역 리스트 카운트 -->
+	<select id="getAdPaymentListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM PAYMENT P 
+		JOIN MEMBER M ON(P.MEMBER_ID = M.MEMBER_ID)
+	</select>
+	<!-- 관리자  총 결제 내역 전체 조회, 검색조회 -->
+	<select id="selectAdPayList" resultMap="paymentMemberResultSet">
+		SELECT * 
+		FROM PAYMENT P 
+		JOIN MEMBER M ON(P.MEMBER_ID = M.MEMBER_ID)
+		<choose>
+			<when test="condition != 99">
+				WHERE 
+				<choose>
+					<when test="condition == 30 and userName != null">
+						USER_NAME LIKE '%'||#{userName}||'%' AND PAYMENT_DATE BETWEEN #{startDate} AND #{endDate}
+					</when>
+					<when test="condition == 10 and userName != null">
+						USER_NAME LIKE '%'||#{userName}||'%' 
+					</when>
+					<when test="condition == 20">
+						PAYMENT_DATE BETWEEN #{startDate} AND #{endDate}
+					</when>
+				</choose>
+			</when>
+		</choose>
+		
+		ORDER BY PAYMENT_DATE DESC
+	</select>
+	<!-- 세션에 저장하기 위해 구매한 사람의 포인트를 가져온다. -->
+	<select id="getUseMemberPoint" resultType="_int" parameterType="_int">
+		SELECT USER_POINT
+		FROM MEMBER M 
+		WHERE MEMBER_ID = #{memberId}
+	</select>
+	<!-- 세션에 저장하기 위해 판 사람의 수익금을 가져온다. -->
+	<select id="getRecevieMemberProceeds" resultType="_int" parameterType="_int">
+		SELECT USER_PROCEEDS
+		FROM MEMBER
+		WHERE MEMBER_ID = #{memberId}
+	</select>
+	<!-- 관리자 - 결제내역 검색 리스트 카운트 -->
+	<select id="getAdPaySearchListCount" parameterType="SearchPoint" resultType="_int">
+		SELECT COUNT(*)
+		FROM (
+			SELECT *
+			FROM PAYMENT P 
+			JOIN MEMBER M ON(P.MEMBER_ID=M.MEMBER_ID)
+			WHERE 
+			<choose>
+				<when test="condition == 30 and userName != null">
+					USER_NAME LIKE '%'||#{userName}||'%' AND PAYMENT_DATE BETWEEN #{startDate} AND #{endDate}
+				</when>
+				<when test="condition == 10 and userName != null">
+					USER_NAME LIKE '%'||#{userName}||'%' 
+				</when>
+				<when test="condition == 20">
+					PAYMENT_DATE BETWEEN #{startDate} AND #{endDate}
+				</when>
+			</choose>
+		)		
+	</select>
+	<!-- 관리자 - 포인트내역 검색 리스트 카운트 -->
+	<select id="getAdPointListCount" parameterType="SearchPoint" resultType="_int">
+		SELECT COUNT(*)
+		FROM(
+		    SELECT EMAIL, USER_NAME, USER_POINT, USER_PROCEEDS
+		    FROM MEMBER
+		    <choose>
+				<when test="condition != 99">
+					WHERE 
+					<choose>
+						<when test="condition == 10 and userName != null">
+							USER_NAME LIKE '%'||#{userName}||'%' 
+						</when>
+					</choose>
+				</when>
+			</choose>
+		)
+	</select>
+	<!-- 관리자 - 포인트 내역 전체 조회, 검색 조회 -->
+	<select id="selectAdPointList" resultMap="paymentMemberResultSet">
+		SELECT EMAIL, USER_NAME, USER_POINT, USER_PROCEEDS
+		FROM MEMBER 
+		<choose>
+			<when test="condition != 99">
+				WHERE 
+				<choose>
+					<when test="condition == 10 and userName != null">
+						USER_NAME LIKE '%'||#{userName}||'%' 
+					</when>
+				</choose>
+			</when>
+		</choose>
+		ORDER BY USER_NAME
+	</select>
+	<!--관리자 - 환불 내역 리스트 카운트 -->
+	<select id="getAdRefundListCount" parameterType="Refund" resultType="_int">
+		SELECT COUNT(*)
+		FROM (
+		    SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL,  USE.TRV_ID, TRV_TITLE, 
+			    USE.REQUEST_ID, PLAN_TITLE,  USE.POINT_ID, USE_DATE, USE_POINT, REFUND_ID, REFUND_REASON, 
+			    APPLY_DATE, PROCESSED_DATE, REFUND_STATUS, REF.POINT_ID
+			FROM REFUND REF
+			JOIN USE_POINT USE ON(REF.POINT_ID = USE.POINT_ID)
+			JOIN MEMBER M ON(USE.MEMBER_ID = M.MEMBER_ID)
+			LEFT JOIN TRAVEL T ON(USE.TRV_ID=T.TRV_ID)
+			LEFT JOIN TRV_REQUEST TR ON(USE.REQUEST_ID = TR.REQUEST_ID)
+			LEFT JOIN PARTICIPATION TP ON(TR.REQUEST_ID=TP.REQUEST_ID)
+			LEFT JOIN TRV_PLAN TRP ON(TP.PLAN_ID=TRP.PLAN_ID)
+			<choose>
+		    	<when test="condition != 99">
+		    		WHERE
+		    		<choose>
+		    			<when test="condition == 10">
+							USER_NAME LIKE '%'||#{userName}||'%' 
+						</when>
+		    			<when test="condition == 30">
+							USER_NAME LIKE '%'||#{userName}||'%' AND REFUND_STATUS = #{refundStatus} 
+						</when>
+						<when test="condition == 20">
+							REFUND_STATUS = #{refundStatus} 
+						</when>
+		    		</choose>
+		    	</when>
+		    </choose>
+		)
+	</select>
+	<!-- 관리자 - 환불 내역 조회 -->
+	<select id="selectAdRefundList" resultMap="refundUseMemberTrvTrvRequestResultSet">
+	    SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL, USE_TYPE, USE.TRV_ID, TRV_TITLE, 
+	    	USE.REQUEST_ID, PLAN_TITLE,  USE.POINT_ID, USE_DATE, USE_POINT, REFUND_ID, REFUND_REASON, 
+	    	APPLY_DATE, PROCESSED_DATE, REFUND_STATUS, REF.POINT_ID
+		FROM REFUND REF
+		JOIN USE_POINT USE ON(REF.POINT_ID = USE.POINT_ID)
+		JOIN MEMBER M ON(USE.MEMBER_ID = M.MEMBER_ID)
+		LEFT JOIN TRAVEL T ON(USE.TRV_ID=T.TRV_ID)
+		LEFT JOIN TRV_REQUEST TR ON(USE.REQUEST_ID = TR.REQUEST_ID)
+		LEFT JOIN PARTICIPATION TP ON(TR.REQUEST_ID=TP.REQUEST_ID)
+		LEFT JOIN TRV_PLAN TRP ON(TP.PLAN_ID=TRP.PLAN_ID)
+		<choose>
+	    	<when test="condition != 99">
+	    		WHERE
+	    		<choose>
+					<when test="condition == 10">
+						USER_NAME LIKE '%'||#{userName}||'%' 
+					</when>
+	    			<when test="condition == 30">
+						USER_NAME LIKE '%'||#{userName}||'%' AND REFUND_STATUS = #{refundStatus} 
+					</when>
+					<when test="condition == 20">
+						REFUND_STATUS = #{refundStatus} 
+					</when>
+	    		</choose>
+	    	</when>
+	    </choose>
+	    ORDER BY APPLY_DATE DESC
+	</select>
+	<!-- 관리자 - 환불 상태 바꿔주기 -->
+	<update id="updateRefund" parameterType="Refund">
+		UPDATE REFUND
+		SET REFUND_STATUS = #{refundStatus}, PROCESSED_DATE = SYSDATE
+		WHERE REFUND_ID = #{refundId}
+	</update>
+	<!-- 관리자 - 업데이트 된 환불 내역 들고오기 -->
+	<select id="selectOneRefund" resultMap="refundUseMemberTrvTrvRequestResultSet">
+		SELECT USE.MEMBER_ID, M.USER_NAME, M.EMAIL, USE_TYPE, USE.TRV_ID, TRV_TITLE, USE.REQUEST_ID, PLAN_TITLE, TRP.PLAN_ID, USE.POINT_ID, USE_DATE, USE_POINT, REFUND_ID, REFUND_REASON, APPLY_DATE, PROCESSED_DATE, REFUND_STATUS, REF.POINT_ID
+		FROM REFUND REF
+		JOIN USE_POINT USE ON(REF.POINT_ID = USE.POINT_ID)
+		JOIN MEMBER M ON(USE.MEMBER_ID = M.MEMBER_ID)
+		LEFT JOIN TRAVEL T ON(USE.TRV_ID=T.TRV_ID)
+		LEFT JOIN TRV_REQUEST TR ON(USE.REQUEST_ID = TR.REQUEST_ID)
+		LEFT JOIN PARTICIPATION TP ON(TR.REQUEST_ID=TP.REQUEST_ID)
+		LEFT JOIN TRV_PLAN TRP ON(TP.PLAN_ID=TRP.PLAN_ID)
+		WHERE REFUND_ID=#{refundId}
+	</select>
+	<!-- 관리자 - 환불 상태 성공시 산 사람의 userPoint 업데이트 -->
+	<update id="updateUserPointRefund" parameterType="Refund">
+		UPDATE MEMBER
+		SET USER_POINT = USER_POINT + #{usePoint}
+		WHERE MEMBER_ID = #{memberId}
+	</update>
+	<!-- 관리자 - 판 사람의 아이디 조회 -trvId 이용 -->
+	<select id="selectMemberIdTrv" parameterType="Refund" resultMap="proceedsResultSet">
+		SELECT T.MEMBER_ID, USE_POINT
+		FROM REFUND R
+		JOIN USE_POINT UP ON(R.POINT_ID=UP.POINT_ID)
+		JOIN TRAVEL T ON(UP.TRV_ID = T.TRV_ID)
+		WHERE REFUND_ID=#{refundId}
+	</select>
+	<!-- 관리자 - 판 사람의 아이디 조회 -planId 이용 -->
+	<select id="selectMemberIdRequest" parameterType="Refund" resultMap="proceedsResultSet">
+		SELECT TR.MEMBER_ID, PROCEEDS
+		FROM PROCEEDS P
+		LEFT JOIN PARTICIPATION TRP ON(P.PTCP_ID = TRP.PTCP_ID)
+		JOIN TRV_PLAN TR ON(TRP.PLAN_ID=TR.PLAN_ID)
+		WHERE TR.PLAN_ID = #{planId}
+	</select>
+	<!-- 관리자 - 판 사람의 userProceeds 차감 -->
+	<update id="updateUserProceedsRefund" parameterType="Proceeds">
+		UPDATE MEMBER
+		SET USER_PROCEEDS = USER_PROCEEDS - #{proceeds}
+		WHERE MEMBER_ID = #{memberId}
+	</update>
+	<!-- 판매자의 참여번호를 조회해와야 함  -->
+	<select id="selectOnePtcp" resultType="_int">
+		SELECT PTCP_ID
+		FROM PARTICIPATION 
+		WHERE REQUEST_ID = #{requestId} AND CHOOSE_STATUS='Y'
+	</select>
+	<!-- 차감된 userPoint 찾기 -->
+	<select id="selectOnePoint" resultType="_int">
+		SELECT USER_POINT
+		FROM MEMBER
+		WHERE MEMBER_ID=#{memberId}
+	</select>
+	<!-- 관리자 - 수익금 전체 리스트 카운트 -->
+	<select id="getAdProceedsListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM (
+			SELECT USER_NAME, EMAIL,  
+			    T.MEMBER_ID AS T_MEMBER_ID, 
+			    TRVP.MEMBER_ID AS TRVP_MEMBER_ID, 
+			    TRVR.MEMBER_ID AS TRVR_MEMBER_ID, 
+			    PRO.PROCEEDS_ID, PRO.PROCEEDS, PROCEEDS, PRO.PROCEEDS_DATE, PRO.PROCEEDS_TYPE, 
+			    T.TRV_ID AS T_TRV_ID, T.TRV_TITLE AS T_TRV_TITLE, 
+			    P.PTCP_ID AS TRVP_PTCP_ID, 
+			    TRVP.PLAN_ID TRVP_PLAN_ID, TRVP.PLAN_TITLE AS TRVP_PLAN_TITLE, 
+			    TRVR.REQUEST_ID AS TRVR_REQUEST_ID, TRVR.REQUEST_TITLE AS TRVR_REQUEST_TITLE
+			    FROM PROCEEDS PRO 
+			LEFT JOIN TRAVEL T ON(PRO.TRV_ID=T.TRV_ID)
+			LEFT JOIN PARTICIPATION P ON(PRO.PTCP_ID=P.PTCP_ID)
+			LEFT JOIN TRV_REQUEST TRVR ON(P.REQUEST_ID=TRVR.REQUEST_ID)
+			LEFT JOIN TRV_PLAN TRVP ON(P.PLAN_ID=TRVP.PLAN_ID)
+			LEFT JOIN MEMBER M ON(PRO.MEMBER_ID=M.MEMBER_ID)
+			<choose>
+				<when test="condition != 99">
+					WHERE USER_NAME LIKE '%'||#{userName}||'%'
+				</when>
+			</choose>
+		)
+	</select>
+	<!-- 관리자 - 수익금 조회 -->
+	<select id="selectAdProceedsList" resultMap="PointPlanRequestParticipationMemberTrvResultSet">
+		SELECT USER_NAME, EMAIL, 
+		    T.MEMBER_ID AS T_MEMBER_ID, 
+		    TRVP.MEMBER_ID AS TRVP_MEMBER_ID, 
+		    TRVR.MEMBER_ID AS TRVR_MEMBER_ID, 
+		    PRO.PROCEEDS_ID, PRO.PROCEEDS, PROCEEDS, PRO.PROCEEDS_DATE, PRO.PROCEEDS_TYPE, 
+		    T.TRV_ID AS T_TRV_ID, T.TRV_TITLE AS T_TRV_TITLE, 
+		    P.PTCP_ID AS TRVP_PTCP_ID, 
+		    TRVP.PLAN_ID TRVP_PLAN_ID, TRVP.PLAN_TITLE AS TRVP_PLAN_TITLE, 
+		    TRVR.REQUEST_ID AS TRVR_REQUEST_ID, TRVR.REQUEST_TITLE AS TRVR_REQUEST_TITLE
+		    FROM PROCEEDS PRO 
+		LEFT JOIN TRAVEL T ON(PRO.TRV_ID=T.TRV_ID)
+		LEFT JOIN PARTICIPATION P ON(PRO.PTCP_ID=P.PTCP_ID)
+		LEFT JOIN TRV_REQUEST TRVR ON(P.REQUEST_ID=TRVR.REQUEST_ID)
+		LEFT JOIN TRV_PLAN TRVP ON(P.PLAN_ID=TRVP.PLAN_ID)
+		LEFT JOIN MEMBER M ON(PRO.MEMBER_ID=M.MEMBER_ID)
+		<choose>
+			<when test="condition != 99">
+				WHERE USER_NAME LIKE '%'||#{userName}||'%'
+			</when>
+		</choose>
+		ORDER BY PROCEEDS_DATE DESC
+	</select>
+	<!-- 명소리뷰코드로 명소코드 가져오기 -->
+	<select id="selectSpotId" resultType="_int">
+		SELECT SPOT_ID
+		FROM SPOT_REVIEWS
+		WHERE SPOT_REVIEW_ID=#{spotReviewId}
+	</select>
+	<!-- 관리자 - 환급 내역 리스트 카운트 -->
+	<select id="getAdRebateListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM (
+			SELECT  REBATE_ID, APPLY_DATE, PAY_AMOUNT, R.MEMBER_ID, PAY_DATE, REBATE_STATUS, 
+			EMAIL AS M_EMAIL, USER_NAME AS M_USER_NAME, ACC_CODE AS M_ACC_CODE, ACC_NUMBER AS M_ACC_NUMBER, USER_PROCEEDS AS M_USER_PROCEEDS, USER_POINT AS M_USER_POINT
+			FROM REBATE R
+			JOIN MEMBER M ON(R.MEMBER_ID=M.MEMBER_ID)
+			<choose>
+				<when test="condition != 99">
+					WHERE
+					<choose>
+						<when test="rebateStatus != 0">
+							REBATE_STATUS = #{rebateStatus}
+							<choose>
+								<when test="userName != null">
+									AND USER_NAME LIKE '%'||#{userName}||'%'
+									<choose>
+										<when test="startDate != null">
+											AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
+										</when>
+									</choose>
+								</when>
+								<when test="userName == null and startDate != null">
+									AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
+								</when>
+							</choose>
+						</when>
+						<when test="rebateStatus == 0 and userName != null">
+							USER_NAME LIKE '%'||#{userName}||'%'
+							<choose>
+								<when test="startDate != null">
+									AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
+								</when>
+							</choose>
+						</when>
+						<when test="rebateStatus == 0 and userName == null and startDate != null">
+							APPLY_DATE BETWEEN #{startDate} AND #{endDate}
+						</when>
+					</choose>
+				</when>
+			</choose>
+		)
+	</select>
+	<!-- 관리자 - 환급 내역 조회 -->
+	<select id="selectAdRebateList" resultMap="rebateMemberResultSet">
+		SELECT  REBATE_ID, APPLY_DATE, PAY_AMOUNT, R.MEMBER_ID, PAY_DATE, REBATE_STATUS, 
+			EMAIL AS M_EMAIL, USER_NAME AS M_USER_NAME, ACC_CODE AS M_ACC_CODE, ACC_NUMBER AS M_ACC_NUMBER, USER_PROCEEDS AS M_USER_PROCEEDS, USER_POINT AS M_USER_POINT
+		FROM REBATE R
+		JOIN MEMBER M ON(R.MEMBER_ID=M.MEMBER_ID)
+		<choose>
+			<when test="condition != 99">
+				WHERE
+				<choose>
+					<when test="rebateStatus != 0">
+						REBATE_STATUS = #{rebateStatus}
+						<choose>
+							<when test="userName != null">
+								AND USER_NAME LIKE '%'||#{userName}||'%'
+								<choose>
+									<when test="startDate != null">
+										AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
+									</when>
+								</choose>
+							</when>
+							<when test="userName == null and startDate != null">
+								AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
+							</when>
+						</choose>
+					</when>
+					<when test="rebateStatus == 0 and userName != null">
+						USER_NAME LIKE '%'||#{userName}||'%'
+						<choose>
+							<when test="startDate != null">
+								AND APPLY_DATE BETWEEN #{startDate} AND #{endDate}
+							</when>
+						</choose>
+					</when>
+					<when test="rebateStatus == 0 and userName == null and startDate != null">
+						APPLY_DATE BETWEEN #{startDate} AND #{endDate}
+					</when>
+				</choose>
+			</when>
+		</choose>
+	</select>
+	<!-- 관리자 - 환급 상태 1개 지급 완료로 변경 -->
+	<update id="updateAdRebate" parameterType="_int">
+		UPDATE REBATE
+		SET REBATE_STATUS = 20, PAY_DATE=SYSDATE
+		WHERE REBATE_ID = #{rebateId}
+	</update>
+	<!-- 관리자 - 환급 상태 여러개 지급 완료로 변경 -->
+	<update id="updateAdRebates" parameterType="_int">
+		UPDATE REBATE
+		SET REBATE_STATUS = 20, PAY_DATE=SYSDATE
+		WHERE REBATE_ID = #{rebateId}
+	</update>
+	<select id="downRebates" parameterType="_int" resultMap="downRebatesResultMap">
+		SELECT APPLY_DATE, PAY_AMOUNT,  
+			EMAIL, USER_NAME, ACC_CODE, ACC_NUMBER
+		FROM REBATE R
+		JOIN MEMBER M ON(R.MEMBER_ID=M.MEMBER_ID)
+		WHERE REBATE_STATUS = #{rebateStatus}
+		ORDER BY APPLY_DATE DESC
+	</select>
+	<!-- 일정리뷰 코드 이용하여 trvId조회 -->
+	<select id="selectTrvId" resultType="_int">
+		SELECT TRV_ID
+		FROM TOUR_REVIEW
+		WHERE REVIEW_ID = #{reviewId}
+	</select>
+	<!-- 사용자 - 환급신청 내역 월 검색 리스트 카운트 -->
+	<select id="selectOneRebateListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM (
+			SELECT *
+			FROM REBATE
+			WHERE MEMBER_ID=#{memberId}
+			AND EXTRACT(MONTH FROM APPLY_DATE)=#{month}
+			ORDER BY APPLY_DATE DESC
+		)
+	</select>
+	<!-- 사용자 - 환급신청 내역 월 검색 조회 -->
+	<select id="selectOneRebateList" resultMap="rebateResultSet">
+		SELECT *
+		FROM REBATE
+		WHERE MEMBER_ID=#{memberId}
+		AND EXTRACT(MONTH FROM APPLY_DATE)=#{month}
+		ORDER BY APPLY_DATE DESC
+	</select>
+	<!-- 사용자 - 수익달성 내역 월 검색 리스트 카운트 -->
+	<select id="selectOneProceedsListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM (
+			SELECT USER_NAME, EMAIL, 
+			    T.MEMBER_ID AS T_MEMBER_ID, 
+			    TRVP.MEMBER_ID AS TRVP_MEMBER_ID, 
+			    TRVR.MEMBER_ID AS TRVR_MEMBER_ID, 
+			    PRO.PROCEEDS_ID, PRO.PROCEEDS, PROCEEDS, PRO.PROCEEDS_DATE, PRO.PROCEEDS_TYPE, 
+			    T.TRV_ID AS T_TRV_ID, T.TRV_TITLE AS T_TRV_TITLE, 
+			    P.PTCP_ID AS TRVP_PTCP_ID, 
+			    TRVP.PLAN_ID TRVP_PLAN_ID, TRVP.PLAN_TITLE AS TRVP_PLAN_TITLE, 
+			    TRVR.REQUEST_ID AS TRVR_REQUEST_ID, TRVR.REQUEST_TITLE AS TRVR_REQUEST_TITLE
+			    FROM PROCEEDS PRO 
+			LEFT JOIN TRAVEL T ON(PRO.TRV_ID=T.TRV_ID)
+			LEFT JOIN PARTICIPATION P ON(PRO.PTCP_ID=P.PTCP_ID)
+			LEFT JOIN TRV_REQUEST TRVR ON(P.REQUEST_ID=TRVR.REQUEST_ID)
+			LEFT JOIN TRV_PLAN TRVP ON(P.PLAN_ID=TRVP.PLAN_ID)
+			LEFT JOIN MEMBER M ON(PRO.MEMBER_ID=M.MEMBER_ID)
+			WHERE PRO.MEMBER_ID=#{memberId}
+			AND EXTRACT(MONTH FROM PROCEEDS_DATE)=#{month}
+		)
+	</select>
+	<!-- 사용자 - 수익달성 내역 월 검색 조회 -->
+	<select id="selectOneProceedsList" resultMap="PointPlanRequestParticipationMemberTrvResultSet">
+		SELECT USER_NAME, EMAIL, 
+		    T.MEMBER_ID AS T_MEMBER_ID, 
+		    TRVP.MEMBER_ID AS TRVP_MEMBER_ID, 
+		    TRVR.MEMBER_ID AS TRVR_MEMBER_ID, 
+		    PRO.PROCEEDS_ID, PRO.PROCEEDS, PROCEEDS, PRO.PROCEEDS_DATE, PRO.PROCEEDS_TYPE, 
+		    T.TRV_ID AS T_TRV_ID, T.TRV_TITLE AS T_TRV_TITLE, 
+		    P.PTCP_ID AS TRVP_PTCP_ID, 
+		    TRVP.PLAN_ID TRVP_PLAN_ID, TRVP.PLAN_TITLE AS TRVP_PLAN_TITLE, 
+		    TRVR.REQUEST_ID AS TRVR_REQUEST_ID, TRVR.REQUEST_TITLE AS TRVR_REQUEST_TITLE
+		    FROM PROCEEDS PRO 
+		LEFT JOIN TRAVEL T ON(PRO.TRV_ID=T.TRV_ID)
+		LEFT JOIN PARTICIPATION P ON(PRO.PTCP_ID=P.PTCP_ID)
+		LEFT JOIN TRV_REQUEST TRVR ON(P.REQUEST_ID=TRVR.REQUEST_ID)
+		LEFT JOIN TRV_PLAN TRVP ON(P.PLAN_ID=TRVP.PLAN_ID)
+		LEFT JOIN MEMBER M ON(PRO.MEMBER_ID=M.MEMBER_ID)
+		WHERE PRO.MEMBER_ID=#{memberId}
+		AND EXTRACT(MONTH FROM PROCEEDS_DATE)=#{month}
+	</select>
+</mapper>

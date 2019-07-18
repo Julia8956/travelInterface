@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="Chatting">
+	
+	<!-- Member 지원-->
+	<resultMap type="com.kh.ti.member.model.vo.Member" id="ChattingmemberResultSet">
+		<id property="memberId" column="MEMBER_ID"/>
+		<result property="email" column="EMAIL"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="birthday" column="BIRTHDAY"/>
+		<result property="gender" column="GENDER"/>
+		<result property="accCode" column="ACC_CODE"/>
+		<result property="accNumber" column="ACC_NUMBER"/>
+		<result property="enrollDate" column="ENROLL_DATE"/>
+		<result property="secessionDate" column="SECESSION_DATE"/>
+		<result property="modifyDate" column="MODIFY_DATE"/>
+		<result property="enrollStatus" column="ENROLL_STATUS"/>
+		<result property="phone" column="PHONE"/>
+		<result property="userPoint" column="USER_POINT"/>
+		<result property="userProceeds" column="USER_PROCEEDS"/>
+		<result property="enrollType" column="ENROLL_TYPE"/>
+	</resultMap>
+	
+	<!-- country -->
+	<resultMap type="Country" id="CountryResultSet">
+		<id property="countryId" column="COUNTRY_ID"/>
+		<result property="continentName" column="CONTINENT_NAME"/>
+		<result property="countryNameKo" column="COUNTRY_NAME_KO"/>
+		<result property="countryNameEn" column="COUNTRY_NAME_EN"/>
+		<result property="currencyUnit" column="CURRENCY_UNIT"/>
+	</resultMap>
+	
+	<!-- trvTags -->
+	<resultMap type="Tag" id="TagResultSet">
+		<id property="tagId" column="TAG_ID"/>
+		<result property="tagName" column="TAG_NAME"/>
+	</resultMap>
+	
+	<resultMap type="Tag" id="TagRankResultSet">
+		<result property="tagName" column="TAG_NAME"/>
+	</resultMap>
+	
+	<resultMap type="Country" id="CountryRankResultSet">
+		<result property="countryNameKo" column="COUNTRY_NAME_KO"/>
+	</resultMap>
+	
+	<select id="selectMemberInfo" resultMap="ChattingmemberResultSet" parameterType="int">
+		SELECT *
+		FROM MEMBER
+		WHERE MEMBER_ID = #{userId}
+	</select>
+	
+	<select id="selectTagList" resultMap="TagResultSet">
+		SELECT *
+		FROM Tag
+		ORDER BY TAG_NAME ASC
+	</select>
+	
+	<select id="selectContryList" resultMap="CountryResultSet">
+		SELECT *
+		FROM Country
+		ORDER BY COUNTRY_NAME_KO ASC
+	</select>
+	
+	
+	<select id="selectRankTagList" resultMap="TagRankResultSet">
+		SELECT  TAG_NAME
+		FROM (SELECT TAG_NAME , COUNT(*) TAG_NUM
+		FROM TRAVEL TR 
+		JOIN TRV_TAG TRV ON (TR.TRV_ID = TRV.TRV_ID)
+		JOIN TAG ON (TRV.TAG_ID = TAG.TAG_ID)
+		GROUP BY TAG_NAME
+		ORDER BY TAG_NUM DESC) TAGRANK
+		<![CDATA[WHERE ROWNUM <= 10 ]]>
+	</select>
+	
+	<select id="selectRankCountryList" resultMap="CountryRankResultSet">
+		SELECT COUNTRY_NAME_KO 
+		FROM (SELECT COUNTRY_NAME_KO , COUNT(*) COUNRANK
+		FROM TRAVEL TR 
+		JOIN TRV_CITY TC ON (TR.TRV_ID = TC.TRV_ID)
+		JOIN CITY ON (TC.CITY_ID = CITY.CITY_ID)
+		JOIN COUNTRY ON (city.country_id = COUNTRY.COUNTRY_ID)
+		GROUP BY COUNTRY_NAME_KO
+		ORDER BY COUNRANK DESC) COUNTRYRANK
+		<![CDATA[WHERE ROWNUM <= 10 ]]>
+	</select>
+	
+	
+	
+
+</mapper>

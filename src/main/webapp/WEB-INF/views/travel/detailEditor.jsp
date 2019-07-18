@@ -573,7 +573,7 @@
 							console.log('ajax success called');
 							var range = quill.getSelection();
 							quill.insertEmbed(range.index, 'image', 
-								'http://192.168.30.107:8001/ti/resources/uploadFiles/' + data.changeName);
+								'http://localhost:8001/ti/resources/uploadFiles/' + data.changeName);
 							
 							addGallaryImage(dayNumber, data.changeName, data.fileLevel, data.fileId);
 							

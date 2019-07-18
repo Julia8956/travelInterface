@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="Total">
+
+	<!-- 의뢰글 목록 -->
+	<resultMap type="TravelRequest" id="requestResultSet">
+		<id property="requestId" column="REQUEST_ID"/>
+		<result property="requestTitle" column="REQUEST_TITLE"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="requestPrice" column="REQUEST_PRICE"/>
+		<result property="trvCost" column="TRV_COST"/>
+		<result property="endDate" column="END_DATE"/>
+		<result property="userName" column="USER_NAME"/>
+	</resultMap>
+	
+	<!-- 설계글 목록 조회 -->
+	<resultMap type="TravelRequestPlan" id="planListResultSet">
+		<id property="planId" column="PLAN_ID"/>
+		<result property="ptcpId" column="PTCP_ID"/>
+		<result property="planTitle" column="PLAN_TITLE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="planContent" column="PLAN_CONTENT"/>
+		<result property="enrollDate" column="ENROLL_DATE"/>
+		<result property="modifyDate" column="MODIFY_DATE"/>
+	</resultMap>
+	
+	<!-- 일정글 목록 -->
+	<resultMap type="Travel" id="TravelResultSet">
+		<id property="trvId" column="TRV_ID"/>
+		<result property="trvTitle" column="TRV_TITLE" />
+		<result property="startDate" column="START_DATE" />
+		<result property="endDate" column="END_DATE" />
+		<result property="compNumber" column="COMP_NUMBER" />
+		<result property="budget" column="BUDGET" />
+		<result property="openDate" column="OPEN_DATE" />
+		<result property="modifyDate" column="MODIFY_DATE" />
+		<result property="completeDate" column="COMPLETE_DATE" />
+		<result property="status" column="STATUS" />
+		<result property="memberId" column="MEMBER_ID" />
+		<result property="userName" column="USER_NAME" />
+		<result property="trvRef" column="TRV_REF" />
+	</resultMap>
+	
+	<!-- 리뷰 목록 -->
+	<resultMap type="TourReview" id="tourReviewResultSet">
+		<id property="reviewId" column="REVIEW_ID"/>
+		<result property="riviewDate" column="REVIEW_DATE"/>
+		<result property="reviewStatus" column="REVIEW_STATUS"/>
+		<result property="grade" column="GRADE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="reviewContent" column="REVIEW_CONTENT"/>
+		<result property="trvId" column="TRV_ID"/>
+		<result property="writeStatus" column="WRITE_STAUTS"/>
+	</resultMap>
+	
+	<!-- 의뢰글 수 -->
+	<select id="getReqTotalCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM TRV_REQUEST
+		WHERE CHOOSE_STATUS = 'N'
+	</select>
+	
+	<!-- 설계글 수 -->
+	<select id="getPlanTotalCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM TRV_PLAN
+	</select>
+	
+	<!-- 일정글 수 -->
+	<select id="getTrvTotalCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM TRAVEL T
+		LEFT JOIN USE_POINT UP ON(T.TRV_ID = UP.TRV_ID)
+		WHERE T.STATUS = 'Y'
+		AND UP.POINT_ID IS NULL
+	</select>
+	
+	<!-- 리뷰 수 -->
+	<select id="getReviewTotalCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM TOUR_REVIEW
+		WHERE REVIEW_STATUS = 'Y'
+	</select>
+	
+	<!-- 의뢰글 목록 -->
+	<select id="selectReqTotalList" resultMap="requestResultSet">
+		SELECT *
+		FROM TRV_REQUEST TR
+		JOIN MEMBER M ON(TR.MEMBER_ID = M.MEMBER_ID)
+		WHERE TR.CHOOSE_STATUS = 'N'
+		ORDER BY TR.END_DATE DESC
+	</select>
+	
+	<!-- 설계글 목록 -->
+	<select id="selectPlanTotalList" resultMap="planListResultSet">
+		SELECT *
+		FROM TRV_PLAN TP
+		JOIN MEMBER M ON(TP.MEMBER_ID = M.MEMBER_ID)
+		JOIN PARTICIPATION P ON(TP.PLAN_ID = P.PLAN_ID)
+		WHERE P.CHOOSE_STATUS = 'N'
+		ORDER BY TP.ENROLL_DATE DESC
+	</select>
+	
+	<!-- 일정글 목록 -->
+	<select id="selectTrvTotalList" resultMap="TravelResultSet">
+		SELECT *
+		FROM TRAVEL T
+		LEFT JOIN USE_POINT UP ON(T.TRV_ID = UP.TRV_ID)
+		JOIN MEMBER M ON(T.MEMBER_ID = M.MEMBER_ID)
+		WHERE T.STATUS = 'Y'
+		AND UP.POINT_ID IS NULL
+		ORDER BY T.OPEN_DATE DESC
+	</select>
+	
+	<!-- 리뷰 목록 -->
+	<select id="selectReviewTotalList" resultMap="tourReviewResultSet">
+		SELECT *
+		FROM TOUR_REVIEW R
+		JOIN MEMBER M ON(R.MEMBER_ID = M.MEMBER_ID)
+		WHERE R.REVIEW_STATUS = 'Y'
+		ORDER BY R.REVIEW_DATE DESC
+	</select>
+	
+	<!-- 의뢰글 삭제 -->
+	<update id="updateReqDelete" parameterType="_int">
+		UPDATE TRV_REQUEST
+		SET CHOOSE_STATUS = 'D'
+		WHERE REQUEST_ID = #{reqId}
+	</update>
+	
+	<!-- 설계글 삭제 -->
+	<update id="updatePlanDelete" parameterType="_int">
+		UPDATE PARTICIPATION
+		SET CHOOSE_STATUS = 'D'
+		WHERE PTCP_ID = #{ptcpId}
+	</update>
+	
+	<!-- 일정글 삭제 -->
+	<update id="updateTrvDelete" parameterType="_int">
+		UPDATE TRAVEL
+		SET STATUS = 'N'
+		WHERE TRV_ID = #{trvId}
+	</update>
+	
+	<!-- 리뷰 삭제 -->
+	<update id="updateReviewDelete" parameterType="_int">
+		UPDATE TOUR_REVIEW
+		SET REVIEW_STATUS = 'D'
+		WHERE REVIEW_ID = #{reviewId}
+	</update>
+</mapper>

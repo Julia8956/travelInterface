@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="Inquiry">
+
+	<!-- 나의 문의목록 resultSet -->
+	<resultMap type="Inquiry" id="inquiryListResultSet">
+		<id property="inquiryId" column="INQUIRY_ID"/>
+		<result property="inquiryDate" column="INQUIRY_DATE"/>
+		<result property="replyDate" column="REPLY_DATE"/>
+		<result property="replyStatus" column="REPLY_STATUS"/>
+		<result property="replyContent" column="REPLY_CONTENT" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="inquiryContent" column="INQUIRY_CONTENT" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="inquiryType" column="INQUIRY_TYPE"/>
+		<result property="inquiryTitle" column="INQUIRY_TITLE"/>
+	</resultMap>
+	
+	<!-- 문의하기 인서트 -->
+	<insert id="insertInquiry" parameterType="Inquiry">
+		INSERT INTO INQUIRY
+		VALUES(INQUIRY_SEQ.NEXTVAL, SYSDATE, NULL, 'N', NULL,
+		#{memberId}, #{inquiryContent}, #{inquiryType}, #{inquiryTitle})
+	</insert>
+	
+	<!-- 나의 문의글 수 조회 -->
+	<select id="getInquiryCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM INQUIRY
+		WHERE MEMBER_ID = #{memberId}
+	</select>
+	
+	<!-- 나의 문의글 목록들 조회 -->
+	<select id="selectInquiryList" resultMap="inquiryListResultSet" parameterType="_int">
+		SELECT INQUIRY_ID, INQUIRY_TYPE, INQUIRY_TITLE, INQUIRY_DATE, REPLY_STATUS
+		FROM INQUIRY
+		WHERE MEMBER_ID = #{memberId}
+	</select>
+	
+	<!-- 나의 문의 상세조회 -->
+	<select id="selectMyInquiryDetail" resultMap="inquiryListResultSet" parameterType="Inquiry">
+		SELECT *
+		FROM INQUIRY
+		WHERE INQUIRY_ID = #{inquiryId}
+	</select>
+</mapper>

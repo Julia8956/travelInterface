@@ -1,0 +1,667 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="TravelBoard">
+	<!-- country -->
+	<resultMap type="Country" id="travelCountryResultSet">
+		<id property="countryId" column="COUNTRY_ID"/>
+		<result property="continentName" column="CONTINENT_NAME"/>
+		<result property="countryNameKo" column="COUNTRY_NAME_KO"/>
+		<result property="countryNameEn" column="COUNTRY_NAME_EN"/>
+		<result property="currencyUnit" column="CURRENCY_UNIT"/>
+	</resultMap>
+	
+	<!-- trvCities -->
+	<resultMap type="trvCity" id="travelCityResultSet">
+		<id property="cityId" column="CITY_ID"/>
+		<result property="cityNameKo" column="CITY_NAME_KO"/>
+		<result property="cityNameEn" column="CITY_NAME_EN"/>
+		<result property="countryNameKo" column="COUNTRY_NAME_KO"/>
+		<result property="countryNameEn" column="COUNTRY_NAME_EN" />
+		<result property="currencyUnit" column="CURRENCY_UNIT"/>
+	</resultMap>
+	
+	<!-- city -->
+	<resultMap type="city" id="cityResultSet">
+		<id property="cityId" column="CITY_ID"/>
+		<result property="trvId" column="TRV_ID"/>
+		<result property="cityNameKo" column="CITY_NAME_KO"/>
+		<result property="cityNameEn" column="CITY_NAME_EN"/>
+		<result property="countryId" column="COUNTRY_ID"/>
+		<result property="countryNameKo" column="COUNTRY_NAME_KO"/>
+		<result property="countryNameEn" column="COUNTRY_NAME_EN"/>
+		<result property="currencyUnit" column="CURRENCY_UNIT"/>
+	</resultMap>
+		
+	<!-- trvTags -->
+	<resultMap type="Tag" id="travelTagResultSet">
+		<id property="tagId" column="TAG_ID"/>
+		<result property="tagName" column="TAG_NAME"/>
+	</resultMap>
+	
+	<!-- schFile -->
+	<resultMap type="schFile" id="schFileResultSet">
+		<id property="fileId" column="FILE_ID"/>
+		<result property="originName" column="ORIGIN_NAME"/>
+		<result property="changeName" column="CHANGE_NAME"/>
+		<result property="filePath" column="FILE_PATH"/>
+		<result property="uploadDate" column="UPLOAD_DATE"/>
+		<result property="fileLevel" column="FILE_LEVEL"/>
+		<result property="fileCaption" column="FILE_CAPTION"/>
+		<result property="schId" column="SCH_ID"/>
+		<result property="fileStatus" column="FILE_STATUS"/>
+	</resultMap>
+	
+	<resultMap type="Gallary" id="gallaryResultSet">
+		<id property="fileId" column="FILE_ID"/>
+		<result property="originName" column="ORIGIN_NAME"/>
+		<result property="changeName" column="CHANGE_NAME"/>
+		<result property="filePath" column="FILE_PATH"/>
+		<result property="uploadDate" column="UPLOAD_DATE"/>
+		<result property="fileLevel" column="FILE_LEVEL"/>
+		<result property="fileCaption" column="FILE_CAPTION"/>
+		<result property="schId" column="SCH_ID"/>
+		<result property="fileStatus" column="FILE_STATUS"/>
+		<result property="dayNumber" column="DAY_NUMBER"/>
+	</resultMap>
+	
+	<!-- likey -->
+	<resultMap type="Likey" id="likeyResultSet">
+		<id property="likeyId" column="LIKEY_ID"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="enrollDate" column="ENROLL_DATE"/>
+		<result property="likeyType" column="LIKEY_TYPE"/>
+		<result property="spotId" column="SPOT_ID"/>
+		<result property="trvId" column="TRV_ID"/>
+	</resultMap>
+	
+	<!-- TravelBoard -->
+	<resultMap type="TravelBoard" id="travelBoardResultSet">
+		<id property="trvId" column="TRV_ID"/>
+		<result property="trvTitle" column="TRV_TITLE"/>
+		<result property="startDate" column="START_DATE"/>
+		<result property="endDate" column="END_DATE"/>
+		<result property="compNumber" column="COMP_NUMBER"/>
+		<result property="openDate" column="OPEN_DATE"/>
+		<result property="modifyDate" column="MODIFY_DATE"/>
+		<result property="completeDate" column="COMPLETE_DATE"/>
+		<result property="status" column="STATUS"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="trvRef" column="TRV_REF"/>
+		<result property="likeyCount" column="LIKEY_COUNT"/>
+		<result property="buyCount" column="BUY_COUNT"/>
+		<result property="buyStatus" column="BUY_STATUS"/>
+		<result property="likeyStatus" column="LIKEY_STATUS"/>
+		<result property="budget" column="BUDGET"/>
+		
+		<collection property="trvCities" javaType="java.util.ArrayList" resultMap="travelCityResultSet"/>
+		<collection property="trvTags" javaType="java.util.ArrayList" resultMap="travelTagResultSet"/>
+		<collection property="schFiles" javaType="java.util.ArrayList" resultMap="schFileResultSet"/>
+	</resultMap>
+	
+	<resultMap type="TrvBoardSch" id="trvScheduleResultSet">
+		<id property="schId" column="SCH_ID" />
+		<result property="schTitle" column="SCH_TITLE" />
+		<result property="schNumber" column="SCH_NUMBER" />
+		<result property="startTime" column="START_TIME" />
+		<result property="endTime" column="END_TIME" />
+		<result property="isTimeset" column="IS_TIMESET" />
+		<result property="schContent" column="SCH_CONTENT" />
+		<result property="schTransp" column="SCH_TRANSP" />
+		<result property="plcId" column="PLC_ID" />
+		<result property="plcName" column="PLC_NAME"/>
+		<result property="dayId" column="DAY_ID" />
+		<result property="likeyId" column="LIKEY_ID" />
+		<result property="spotId" column="SPOT_ID" />
+		<collection property="schFiles" javaType="java.util.ArrayList" resultMap="schFileResultSet"/>
+	</resultMap>
+	
+	<resultMap type="TrvDaySchedule" id="trvDayScheduleResultSet">
+		<id property="dayId" column="DAY_ID"/>
+		<result property="dayNumber" column="DAY_NUMBER"/>
+		<result property="dayDate" column="DAY_DATE"/>
+		<result property="dayMemo" column="DAY_MEMO"/>
+		<result property="dayWeather" column="DAY_WEATHER"/>
+		<result property="trvId" column="TRV_ID"/>
+		<collection property="trvSchedule" javaType="java.util.ArrayList" resultMap="trvScheduleResultSet"/>
+	</resultMap>
+	
+	<!-- TourReview -->
+	<resultMap type="TourReview" id="tourReviewResultSet">
+		<id property="reviewId" column="REVIEW_ID"/>
+		<result property="riviewDate" column="REVIEW_DATE"/>
+		<result property="reviewStatus" column="REVIEW_STATUS"/>
+		<result property="grade" column="GRADE"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="reviewContent" column="REVIEW_CONTENT"/>
+		<result property="trvId" column="TRV_ID"/>
+		<result property="writeStatus" column="WRITE_STAUTS"/>
+	</resultMap>
+	
+	<resultMap type="TrvCost" id="costResultSet">
+		<id property="costId" column="COST_ID" />
+		<result property="costContent" column="COST_CONTENT" />
+		<result property="costAmount" column="COST_AMOUNT" />
+		<result property="currency" column="CURRENCY" />
+		<result property="schId" column="SCH_ID" />
+		<result property="dayId" column="DAY_ID" />
+		<result property="costType" column="COST_TYPE" />
+	</resultMap>
+	
+	<!-- TravelCost -->
+	<resultMap type="TravelCost" id="travelCostResultSet">
+		<result property="dayDate" column="DAY_DATE"/>
+		<result property="dayNumber" column="DAY_NUMBER"/>
+		<result property="roomCharge" column="ROOM_CHARGE"/>
+		<result property="trafficCharge" column="TRAFFIC_CHARGE"/>
+		<result property="foodCharge" column="FOOD_CHARGE"/>
+		<result property="shoppingCharge" column="SHOPPING_CHARGE"/>
+		<result property="sightseeingCharge" column="SIGHTSEEING_CHARGE"/>
+		<result property="etcCharge" column="ETC_CHARGE"/>
+		<result property="totalCost" column="TOTAL_COST"/>
+		<collection property="trvCost" javaType="java.util.ArrayList" resultMap="costResultSet"/>
+	</resultMap>
+	
+	<!-- 가계부 다운로드 -->
+	<resultMap id="CostDownResultMap" type="java.util.HashMap">
+		<result property="trvTitle" column="TRV_TITLE" />
+		<result property="userName" column="USER_NAME" />
+		<result property="dayNumber" column="DAY_NUMBER" />
+		<result property="dayDate" column="DAY_DATE" />
+		<result property="costContent" column="COST_CONTENT" />
+		<result property="costType" column="COST_TYPE" />
+		<result property="costAmount" column="COST_AMOUNT" />
+		<result property="currency" column="CURRENCY" />
+	</resultMap>
+	
+	
+	<!-- 여행일정 페이징용 -->
+	<select id="getListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM TRAVEL T
+		WHERE STATUS = 'Y'
+		AND TRV_REF IS NULL
+		<if test="trvTitle != null"> AND T.TRV_TITLE LIKE '%' || #{ trvTitle } || '%' </if>
+		<if test="userName != null"> AND M.USER_NAME LIKE '%' || #{ userName } || '%' </if>
+		
+		<if test="trvTags != null">
+			AND T.TRV_ID IN (
+        
+	        SELECT DISTINCT T.TRV_ID
+	        FROM TRAVEL T
+	        LEFT JOIN TRV_TAG TG ON (T.TRV_ID = TG.TRV_ID)
+	        LEFT JOIN TAG TA ON (TG.TAG_ID = TA.TAG_ID) 
+	        WHERE T.STATUS = 'Y'
+	        AND (
+			<foreach item="s" collection="trvTags" separator="OR">
+				TA.TAG_NAME = #{ s }
+			</foreach>
+			))
+		</if>
+		
+		<if test="trvCities != null">
+			AND T.TRV_ID IN (
+		
+			SELECT DISTINCT T.TRV_ID
+			FROM TRAVEL T
+			LEFT JOIN TRV_CITY TCT ON (TCT.TRV_ID = T.TRV_ID)
+			LEFT JOIN CITY CI ON (CI.CITY_ID = TCT.CITY_ID)
+			LEFT JOIN COUNTRY COU ON (COU.COUNTRY_ID = CI.COUNTRY_ID)
+			WHERE T.STATUS = 'Y'
+			AND (
+			<foreach item="c" collection="trvCities" separator="OR">
+				COU.COUNTRY_NAME_KO = #{ c }
+			</foreach>
+			))
+		</if>
+	</select>
+	
+	<!-- 일정 구매리뷰 페이징용 -->
+	<select id="getListCountReview" resultType="_int">
+		SELECT COUNT(*)
+		FROM TOUR_REVIEW
+		WHERE TRV_ID = #{ trvId }
+		AND REVIEW_STATUS = 'Y'
+		ORDER BY REVIEW_DATE DESC
+	</select>
+	
+	<!-- 페이징에 따른 여행일정 번호 조회 -->
+	<select id="selectTravelBoardId" resultType="_int">
+		SELECT T.TRV_ID
+		FROM TRAVEL T
+		JOIN (SELECT T.TRV_ID, COUNT(L.LIKEY_ID) as LIKEY_COUNT
+              FROM TRAVEL T
+              LEFT JOIN LIKEY L ON (L.TRV_ID = T.TRV_ID)
+              WHERE T.STATUS = 'Y'
+              AND T.TRV_REF IS NULL
+              GROUP BY T.TRV_ID) TRL ON (TRL.TRV_ID = T.TRV_ID)
+        JOIN (SELECT T.TRV_ID, COUNT(U.USE_POINT) as BUY_COUNT
+              FROM TRAVEL T
+              LEFT JOIN USE_POINT U ON (U.TRV_ID = T.TRV_ID)
+              WHERE T.STATUS = 'Y'
+              AND T.TRV_REF IS NULL
+              GROUP BY T.TRV_ID) US ON (US.TRV_ID = T.TRV_ID)
+		WHERE STATUS = 'Y'
+		AND TRV_REF IS NULL
+		<if test="trvTitle != null"> AND T.TRV_TITLE LIKE '%' || #{ trvTitle } || '%' </if>
+		<if test="userName != null"> AND M.USER_NAME LIKE '%' || #{ userName } || '%' </if>
+		
+		<if test="trvTags != null">
+			AND T.TRV_ID IN (
+        
+	        SELECT DISTINCT T.TRV_ID
+	        FROM TRAVEL T
+	        LEFT JOIN TRV_TAG TG ON (T.TRV_ID = TG.TRV_ID)
+	        LEFT JOIN TAG TA ON (TG.TAG_ID = TA.TAG_ID) 
+	        WHERE T.STATUS = 'Y'
+	        AND (
+			<foreach item="s" collection="trvTags" separator="OR">
+				TA.TAG_NAME = #{ s }
+			</foreach>
+			))
+		</if>
+		
+		<if test="trvCities != null">
+			AND T.TRV_ID IN (
+		
+			SELECT DISTINCT T.TRV_ID
+			FROM TRAVEL T
+			LEFT JOIN TRV_CITY TCT ON (TCT.TRV_ID = T.TRV_ID)
+			LEFT JOIN CITY CI ON (CI.CITY_ID = TCT.CITY_ID)
+			LEFT JOIN COUNTRY COU ON (COU.COUNTRY_ID = CI.COUNTRY_ID)
+			WHERE T.STATUS = 'Y'
+			AND (
+			<foreach item="c" collection="trvCities" separator="OR">
+				COU.COUNTRY_NAME_KO = #{ c }
+			</foreach>
+			))
+		</if>
+		
+		<choose>
+			<when test="likeyCount lt 0">ORDER BY TRL.LIKEY_COUNT DESC, T.COMPLETE_DATE DESC</when>
+			<when test="buyCount lt 0">ORDER BY US.BUY_COUNT DESC, T.COMPLETE_DATE DESC</when>
+			<otherwise>
+				ORDER BY T.COMPLETE_DATE DESC, T.TRV_ID DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 여행일정 전체 조회용 -->
+	<select id="selectTravelBoardList" resultMap="travelBoardResultSet" parameterType="java.util.Map">
+		SELECT DISTINCT T.TRV_ID, T.TRV_TITLE, T.START_DATE, T.END_DATE, T.COMPLETE_DATE, T.STATUS, 
+       		   M.USER_NAME, T.TRV_REF, TG.TAG_ID, TA.TAG_NAME, CITY_NAME_KO, COUNTRY_NAME_KO, CITY_ID, LIKEY_COUNT, BUY_COUNT,
+               SFI.FILE_ID, SFI.ORIGIN_NAME, SFI.CHANGE_NAME, SFI.FILE_PATH
+	    FROM TRAVEL T
+	    JOIN MEMBER M ON (M.MEMBER_ID = T.MEMBER_ID)
+	    JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+	    LEFT JOIN TRV_SCH TS ON (TD.DAY_ID = TS.DAY_ID)
+        LEFT JOIN SCH_FILE SFI ON (SFI.SCH_ID = TS.SCH_ID) AND SFI.FILE_LEVEL = 0 AND FILE_STATUS = 'Y'
+	    LEFT JOIN TRV_TAG TG ON (T.TRV_ID = TG.TRV_ID)
+	    LEFT JOIN TAG TA ON (TG.TAG_ID = TA.TAG_ID)
+        LEFT JOIN (SELECT TCT.CITY_ID, CI.CITY_NAME_KO, COU.COUNTRY_NAME_KO, T.TRV_ID
+                    FROM TRAVEL T
+                    LEFT JOIN TRV_CITY TCT ON (TCT.TRV_ID = T.TRV_ID)
+                            LEFT JOIN CITY CI ON (CI.CITY_ID = TCT.CITY_ID)
+                            LEFT JOIN COUNTRY COU ON (COU.COUNTRY_ID = CI.COUNTRY_ID)) TC ON (T.TRV_ID = TC.TRV_ID)
+        JOIN (SELECT T.TRV_ID, COUNT(L.LIKEY_ID) as LIKEY_COUNT
+              FROM TRAVEL T
+              LEFT JOIN LIKEY L ON (L.TRV_ID = T.TRV_ID)
+              WHERE T.STATUS = 'Y'
+              AND T.TRV_REF IS NULL
+              GROUP BY T.TRV_ID) TRL ON (TRL.TRV_ID = T.TRV_ID)
+        JOIN (SELECT T.TRV_ID, COUNT(U.USE_POINT) as BUY_COUNT
+              FROM TRAVEL T
+              LEFT JOIN USE_POINT U ON (U.TRV_ID = T.TRV_ID)
+              WHERE T.STATUS = 'Y'
+              AND T.TRV_REF IS NULL
+              GROUP BY T.TRV_ID) US ON (US.TRV_ID = T.TRV_ID)
+	    WHERE T.STATUS = 'Y'
+	    AND T.TRV_REF IS NULL
+	    AND T.COMPLETE_DATE IS NOT NULL
+	    <if test="list.size gt 0">
+	    	AND (
+	    </if>
+		<foreach item="trvId" collection="list" separator="OR">
+			T.TRV_ID = #{ trvId }
+		</foreach>
+		<if test="list.size gt 0">
+	    	)
+	    </if>
+	    
+	    <choose>
+			<when test="tb.likeyCount lt 0">ORDER BY TRL.LIKEY_COUNT DESC, T.COMPLETE_DATE DESC</when>
+			<when test="tb.buyCount lt 0">ORDER BY US.BUY_COUNT DESC, T.COMPLETE_DATE DESC</when>
+			<otherwise>
+				ORDER BY T.COMPLETE_DATE DESC, T.TRV_ID DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="selectTagList" resultMap="travelTagResultSet">
+		SELECT *
+		FROM TAG
+	</select>
+	
+	<select id="selectCityList" resultMap="travelCountryResultSet">
+		SELECT *
+		FROM COUNTRY
+		ORDER BY COUNTRY_NAME_KO
+	</select>
+	
+	<select id="selectTravelDetailForm" resultMap="travelBoardResultSet">
+		SELECT DISTINCT T.TRV_ID, T.TRV_TITLE, T.START_DATE, T.END_DATE, T.COMPLETE_DATE, T.STATUS, 
+       		   T.MEMBER_ID, M.USER_NAME, T.TRV_REF, TA.TAG_NAME, TG.TAG_ID, LIKEY_COUNT, BUY_COUNT,
+       		   CITY_ID, CITY_NAME_KO, COUNTRY_NAME_KO, COUNTRY_NAME_EN, CITY_NAME_EN, T.BUDGET, CURRENCY_UNIT
+	    FROM TRAVEL T
+	    JOIN MEMBER M ON (M.MEMBER_ID = T.MEMBER_ID)
+	    JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+	    LEFT JOIN TRV_SCH TS ON (TD.DAY_ID = TS.DAY_ID)
+	    LEFT JOIN TRV_TAG TG ON (T.TRV_ID = TG.TRV_ID)
+	    LEFT JOIN TAG TA ON (TG.TAG_ID = TA.TAG_ID)
+        LEFT JOIN (SELECT TCT.CITY_ID, CI.CITY_NAME_KO, CI.CITY_NAME_EN, COU.COUNTRY_NAME_KO, COU.COUNTRY_NAME_EN, COU.CURRENCY_UNIT, T.TRV_ID
+                    FROM TRAVEL T
+                    LEFT JOIN TRV_CITY TCT ON (TCT.TRV_ID = T.TRV_ID)
+                            LEFT JOIN CITY CI ON (CI.CITY_ID = TCT.CITY_ID)
+                            LEFT JOIN COUNTRY COU ON (COU.COUNTRY_ID = CI.COUNTRY_ID)) TC ON (T.TRV_ID = TC.TRV_ID)
+        JOIN (SELECT T.TRV_ID, COUNT(L.LIKEY_ID) as LIKEY_COUNT
+              FROM TRAVEL T
+              LEFT JOIN LIKEY L ON (L.TRV_ID = T.TRV_ID)
+              WHERE T.STATUS = 'Y'
+              AND T.TRV_REF IS NULL
+              GROUP BY T.TRV_ID) TRL ON (TRL.TRV_ID = T.TRV_ID)
+        JOIN (SELECT T.TRV_ID, COUNT(U.USE_POINT) as BUY_COUNT
+              FROM TRAVEL T
+              LEFT JOIN USE_POINT U ON (U.TRV_ID = T.TRV_ID)
+              WHERE T.STATUS = 'Y'
+              AND T.TRV_REF IS NULL
+              GROUP BY T.TRV_ID) US ON (US.TRV_ID = T.TRV_ID)
+	    WHERE T.STATUS = 'Y'
+	    AND T.TRV_REF IS NULL
+		AND T.TRV_ID = #{ trvId }
+	</select>
+	
+	<select id="checkBuyStatus" resultType="string">
+		SELECT DECODE(COUNT(*), 0, 'N', 1, 'Y') BUY_STATUS
+		FROM USE_POINT
+		WHERE TRV_ID = #{ trvId }
+		AND MEMBER_ID = #{ memberId }
+	</select>
+	
+	<select id="checkLikeyStatus" resultType="string">
+		SELECT DECODE(COUNT(*), 0, 'N', 1, 'Y') LIKEY_STATUS
+		FROM LIKEY
+		WHERE TRV_ID = #{ trvId }
+		AND MEMBER_ID = #{ memberId }
+	</select>
+	
+	<update id="travelDelete" parameterType="_int">
+		UPDATE TRAVEL
+		SET STATUS = 'N'
+		WHERE TRV_ID = #{ trvId }
+	</update>
+	
+	<insert id="travelLikeyInsert" parameterType="Likey">
+		INSERT INTO LIKEY (LIKEY_ID, MEMBER_ID, ENROLL_DATE, LIKEY_TYPE, TRV_ID)
+		VALUES (LIKEY_SEQ.NEXTVAL, #{ memberId }, SYSDATE, '일정', #{ trvId })
+	</insert>
+	
+	<delete id="travelLikeyDelete" parameterType="Likey">
+		DELETE FROM LIKEY
+		WHERE MEMBER_ID = #{ memberId }
+		AND TRV_ID = #{ trvId }
+	</delete>
+	
+	<!-- 상세일정 조회 -->
+	<select id="selectDaySchList" parameterType="TravelBoard" resultMap="trvDayScheduleResultSet">
+		SELECT *
+		FROM TRV_DAY TD
+		LEFT JOIN TRV_SCH TSCH ON (TD.DAY_ID = TSCH.DAY_ID)
+		LEFT JOIN SCH_FILE SF ON (TSCH.SCH_ID = SF.SCH_ID)
+		WHERE TD.TRV_ID = #{ trvId }
+		ORDER BY TD.DAY_NUMBER, TSCH.SCH_NUMBER
+	</select>
+	
+	<!-- 상세일정 본문내용 조회 -->
+	<select id="selectSchContent" resultMap="trvScheduleResultSet" parameterType="_int">
+		SELECT TS.SCH_ID, TS.SCH_TITLE, TS.SCH_NUMBER, TS.START_TIME, TS.END_TIME, TS.IS_TIMESET, TS.SCH_CONTENT, TS.SCH_TRANSP, TS.PLC_ID, TS.PLC_NAME, TS.DAY_ID, TS.LIKEY_ID, TS.SPOT_ID, TD.DAY_NUMBER
+		FROM TRV_SCH TS
+		JOIN TRV_DAY TD ON (TD.DAY_ID = TS.DAY_ID)
+		WHERE TS.SCH_ID = #{ schId }
+		ORDER BY TD.DAY_NUMBER, TS.SCH_NUMBER
+	</select>
+	
+	<!-- 구매리뷰 조회 -->
+	<select id="tourReviewList" resultMap="tourReviewResultSet">
+		SELECT *
+		FROM TOUR_REVIEW TR
+		JOIN MEMBER M ON (TR.MEMBER_ID = M.MEMBER_ID)
+		WHERE TRV_ID = #{ trvId }
+		AND REVIEW_STATUS = 'Y'
+		ORDER BY REVIEW_DATE DESC
+	</select>
+	
+	<select id="CheckWriteStatus" resultType="string">
+		SELECT DECODE(COUNT(*), 0, 'N', 1, 'Y') WRITE_STATUS
+		FROM TOUR_REVIEW
+		WHERE REVIEW_STATUS = 'Y'
+		AND TRV_ID = #{ trvId }
+		AND MEMBER_ID = #{ memberId }
+	</select>
+	
+	<!-- 일정 구매리뷰 추가 -->
+	<insert id="insertReview" parameterType="TourReview">
+		INSERT INTO TOUR_REVIEW (REVIEW_ID, REVIEW_DATE, REVIEW_STATUS, GRADE, MEMBER_ID, REVIEW_CONTENT, TRV_ID)
+		VALUES(TOUR_REVIEW_SEQ.NEXTVAL, SYSDATE, 'Y', #{ grade }, #{ memberId }, #{ reviewContent }, #{ trvId })
+	</insert>
+	
+	<!-- 일정 구매리뷰 추가 성공 후 해당 구매리뷰 아이디 조회 -->
+	<select id="searchReviewId" resultType="_int">
+		SELECT REVIEW_ID
+		FROM TOUR_REVIEW
+		WHERE TRV_ID = #{ trvId }
+		AND MEMBER_ID = #{ memberId }
+		AND REVIEW_STATUS = 'Y'
+	</select>
+	
+	<!-- 자신이 작성한 여행일정 리뷰 조회 -->
+	<select id="myTourReviewSearch" resultMap="tourReviewResultSet">
+	    SELECT *
+	    FROM TOUR_REVIEW TR
+	    JOIN MEMBER M ON (TR.MEMBER_ID = M.MEMBER_ID)
+	    WHERE REVIEW_STATUS = 'Y'
+	    AND TR.TRV_ID = #{ trvId }
+	    AND M.MEMBER_ID = #{ memberId }
+	</select>
+	
+	<!-- 자신이 작성한 여행일정 리뷰 수정 -->
+	<update id="myTourReviewUpdate">
+		UPDATE TOUR_REVIEW
+		SET REVIEW_DATE = SYSDATE, GRADE = #{ grade }, REVIEW_CONTENT = #{ reviewContent }
+		WHERE REVIEW_ID = #{ reviewId }
+	</update>
+	
+	<!-- 자신이 작성한 여행일정 리뷰 삭제 -->
+	<update id="deliteReview">
+		UPDATE TOUR_REVIEW
+		SET REVIEW_DATE = SYSDATE, REVIEW_STATUS = 'N'
+		WHERE REVIEW_ID = #{ reviewId }
+		AND MEMBER_ID = #{ memberId }
+	</update>
+	
+	<!-- 일정의 가계부 조회 -->
+	<select id="selectTravelCost" resultMap="travelCostResultSet">
+		SELECT DISTINCT T.TRV_ID, TD.DAY_NUMBER, RC.ROOM_CHARGE, TC.TRAFFIC_CHARGE, FC.FOOD_CHARGE, SHC.SHOPPING_CHARGE, SIC.SIGHTSEEING_CHARGE, EC.ETC_CHARGE, 
+		TT.TOTAL_COST, TCO.COST_ID, TCO.COST_CONTENT, TCO.COST_AMOUNT, TCO.SCH_ID, TCO.COST_TYPE, TCO.CURRENCY, TD.DAY_DATE
+		FROM TRAVEL T
+		LEFT JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+        JOIN (SELECT DISTINCT T.TRV_ID, TD.DAY_NUMBER, NVL(SUM(COST_AMOUNT), 0) AS TOTAL_COST
+		            FROM TRAVEL T
+		            LEFT JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+		            LEFT JOIN TRV_COST TC ON(TD.DAY_ID = TC.DAY_ID)
+		            LEFT JOIN TRV_SCH TS ON (TS.SCH_ID = TC.SCH_ID)
+		            GROUP BY T.TRV_ID, TD.DAY_NUMBER) TT ON (TD.DAY_NUMBER = TT.DAY_NUMBER) AND TT.TRV_ID = #{ trvId }
+                    
+        JOIN (SELECT DISTINCT T.TRV_ID, TD.DAY_NUMBER, NVL(SUM(COST_AMOUNT), 0) AS ROOM_CHARGE
+		            FROM TRAVEL T
+		            LEFT JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+		            LEFT JOIN TRV_COST TC ON(TD.DAY_ID = TC.DAY_ID) AND COST_TYPE = '숙박'
+		            LEFT JOIN TRV_SCH TS ON (TS.SCH_ID = TC.SCH_ID)
+		            GROUP BY T.TRV_ID, TD.DAY_NUMBER
+                    ORDER BY TD.DAY_NUMBER) RC ON (TD.DAY_NUMBER = RC.DAY_NUMBER) AND RC.TRV_ID = #{ trvId }
+                    
+         JOIN (SELECT DISTINCT T.TRV_ID, TD.DAY_NUMBER, NVL(SUM(COST_AMOUNT), 0) AS TRAFFIC_CHARGE
+		            FROM TRAVEL T
+		            LEFT JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+		            LEFT JOIN TRV_COST TC ON(TD.DAY_ID = TC.DAY_ID) AND COST_TYPE = '교통'
+		            LEFT JOIN TRV_SCH TS ON (TS.SCH_ID = TC.SCH_ID)
+		            GROUP BY T.TRV_ID, TD.DAY_NUMBER
+                    ORDER BY TD.DAY_NUMBER) TC ON (TD.DAY_NUMBER = TC.DAY_NUMBER) AND TC.TRV_ID = #{ trvId }
+                    
+         JOIN (SELECT DISTINCT T.TRV_ID, TD.DAY_NUMBER, NVL(SUM(COST_AMOUNT), 0) AS FOOD_CHARGE
+		            FROM TRAVEL T
+		            LEFT JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+		            LEFT JOIN TRV_COST TC ON(TD.DAY_ID = TC.DAY_ID) AND COST_TYPE = '식비'
+		            LEFT JOIN TRV_SCH TS ON (TS.SCH_ID = TC.SCH_ID)
+		            GROUP BY T.TRV_ID, TD.DAY_NUMBER
+                    ORDER BY TD.DAY_NUMBER) FC ON (TD.DAY_NUMBER = FC.DAY_NUMBER) AND FC.TRV_ID = #{ trvId }
+                    
+		JOIN (SELECT DISTINCT T.TRV_ID, TD.DAY_NUMBER, NVL(SUM(COST_AMOUNT), 0) AS SHOPPING_CHARGE
+		            FROM TRAVEL T
+		            LEFT JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+		            LEFT JOIN TRV_COST TC ON(TD.DAY_ID = TC.DAY_ID) AND COST_TYPE = '쇼핑'
+		            LEFT JOIN TRV_SCH TS ON (TS.SCH_ID = TC.SCH_ID)
+		            GROUP BY T.TRV_ID, TD.DAY_NUMBER
+                    ORDER BY TD.DAY_NUMBER) SHC ON (TD.DAY_NUMBER = SHC.DAY_NUMBER) AND SHC.TRV_ID = #{ trvId }
+                    
+		JOIN (SELECT DISTINCT T.TRV_ID, TD.DAY_NUMBER, NVL(SUM(COST_AMOUNT), 0) AS SIGHTSEEING_CHARGE
+		            FROM TRAVEL T
+		            LEFT JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+		            LEFT JOIN TRV_COST TC ON(TD.DAY_ID = TC.DAY_ID) AND COST_TYPE = '관광'
+		            LEFT JOIN TRV_SCH TS ON (TS.SCH_ID = TC.SCH_ID)
+		            GROUP BY T.TRV_ID, TD.DAY_NUMBER
+                    ORDER BY TD.DAY_NUMBER) SIC ON (TD.DAY_NUMBER = SIC.DAY_NUMBER) AND SIC.TRV_ID = #{ trvId }
+ 
+ 		JOIN (SELECT DISTINCT T.TRV_ID, TD.DAY_NUMBER, NVL(SUM(COST_AMOUNT), 0) AS ETC_CHARGE
+		            FROM TRAVEL T
+		            LEFT JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+		            LEFT JOIN TRV_COST TC ON(TD.DAY_ID = TC.DAY_ID) AND COST_TYPE = '기타'
+		            LEFT JOIN TRV_SCH TS ON (TS.SCH_ID = TC.SCH_ID)
+		            GROUP BY T.TRV_ID, TD.DAY_NUMBER
+                    ORDER BY TD.DAY_NUMBER) EC ON (TD.DAY_NUMBER = EC.DAY_NUMBER) AND EC.TRV_ID = #{ trvId }
+        LEFT JOIN TRV_COST TCO ON (TD.DAY_ID = TCO.DAY_ID)
+        WHERE T.TRV_ID = #{ trvId }
+        ORDER BY TD.DAY_NUMBER, TD.DAY_DATE
+	</select>
+	
+	<select id="myBuyTravelListView" resultMap="travelBoardResultSet">
+		SELECT DISTINCT T.TRV_ID, T.TRV_TITLE, T.START_DATE, T.END_DATE, T.COMPLETE_DATE, T.STATUS, 
+       		   M.USER_NAME, T.TRV_REF, TG.TAG_ID, TA.TAG_NAME, CITY_NAME_KO, COUNTRY_NAME_KO, CITY_ID, LIKEY_COUNT, BUY_COUNT,
+               SFI.ORIGIN_NAME, SFI.CHANGE_NAME, SFI.FILE_PATH
+	    FROM TRAVEL T
+	    JOIN MEMBER M ON (M.MEMBER_ID = T.MEMBER_ID)
+        JOIN USE_POINT UP ON (T.TRV_ID = UP.TRV_ID)
+	    JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+	    LEFT JOIN TRV_SCH TS ON (TD.DAY_ID = TS.DAY_ID)
+        LEFT JOIN SCH_FILE SFI ON (SFI.SCH_ID = TS.SCH_ID) AND SFI.FILE_LEVEL = 0 AND FILE_STATUS = 'Y'
+	    LEFT JOIN TRV_TAG TG ON (T.TRV_ID = TG.TRV_ID)
+	    LEFT JOIN TAG TA ON (TG.TAG_ID = TA.TAG_ID)
+        LEFT JOIN (SELECT TCT.CITY_ID, CI.CITY_NAME_KO, COU.COUNTRY_NAME_KO, T.TRV_ID
+                    FROM TRAVEL T
+                    LEFT JOIN TRV_CITY TCT ON (TCT.TRV_ID = T.TRV_ID)
+                    LEFT JOIN CITY CI ON (CI.CITY_ID = TCT.CITY_ID)
+                    LEFT JOIN COUNTRY COU ON (COU.COUNTRY_ID = CI.COUNTRY_ID)) TC ON (T.TRV_ID = TC.TRV_ID)
+        JOIN (SELECT T.TRV_ID, COUNT(L.LIKEY_ID) as LIKEY_COUNT
+              FROM TRAVEL T
+              LEFT JOIN LIKEY L ON (L.TRV_ID = T.TRV_ID)
+              WHERE T.STATUS = 'Y'
+              AND T.TRV_REF IS NULL
+              GROUP BY T.TRV_ID) TRL ON (TRL.TRV_ID = T.TRV_ID)
+        JOIN (SELECT T.TRV_ID, COUNT(U.USE_POINT) as BUY_COUNT
+              FROM TRAVEL T
+              LEFT JOIN USE_POINT U ON (U.TRV_ID = T.TRV_ID)
+              WHERE T.STATUS = 'Y'
+              AND T.TRV_REF IS NULL
+              GROUP BY T.TRV_ID) US ON (US.TRV_ID = T.TRV_ID)
+	    WHERE T.STATUS = 'Y'
+	    AND T.TRV_REF IS NULL
+	    AND T.COMPLETE_DATE IS NOT NULL
+        AND UP.MEMBER_ID = #{ memberId }
+        AND UP.USE_TYPE = 10
+        ORDER BY T.COMPLETE_DATE, COUNTRY_NAME_KO
+	</select>
+	
+	<select id="myLikeyTravelListView" resultMap="travelBoardResultSet">
+		SELECT DISTINCT T.TRV_ID, T.TRV_TITLE, T.START_DATE, T.END_DATE, T.COMPLETE_DATE, T.STATUS, 
+       		   M.USER_NAME, T.TRV_REF, TG.TAG_ID, TA.TAG_NAME, CITY_NAME_KO, COUNTRY_NAME_KO, CITY_ID,
+               SFI.ORIGIN_NAME, SFI.CHANGE_NAME, SFI.FILE_PATH
+	    FROM TRAVEL T
+	    JOIN MEMBER M ON (M.MEMBER_ID = T.MEMBER_ID)
+        JOIN LIKEY LI ON (LI.TRV_ID = T.TRV_ID)
+	    JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+	    LEFT JOIN TRV_SCH TS ON (TD.DAY_ID = TS.DAY_ID)
+        LEFT JOIN SCH_FILE SFI ON (SFI.SCH_ID = TS.SCH_ID) AND SFI.FILE_LEVEL = 0 AND FILE_STATUS = 'Y'
+	    LEFT JOIN TRV_TAG TG ON (T.TRV_ID = TG.TRV_ID)
+	    LEFT JOIN TAG TA ON (TG.TAG_ID = TA.TAG_ID)
+        LEFT JOIN (SELECT TCT.CITY_ID, CI.CITY_NAME_KO, COU.COUNTRY_NAME_KO, T.TRV_ID
+                    FROM TRAVEL T
+                    LEFT JOIN TRV_CITY TCT ON (TCT.TRV_ID = T.TRV_ID)
+                    LEFT JOIN CITY CI ON (CI.CITY_ID = TCT.CITY_ID)
+                    LEFT JOIN COUNTRY COU ON (COU.COUNTRY_ID = CI.COUNTRY_ID)) TC ON (T.TRV_ID = TC.TRV_ID)
+	    WHERE T.STATUS = 'Y'
+	    AND T.TRV_REF IS NULL
+	    AND T.COMPLETE_DATE IS NOT NULL
+	    AND LI.SPOT_ID IS NULL
+        AND LI.MEMBER_ID = #{ memberId }
+	</select>
+	
+	<select id="travelDetailGallery" resultMap="gallaryResultSet">
+		SELECT DISTINCT SF.FILE_ID, SF.ORIGIN_NAME, SF.CHANGE_NAME, SF.FILE_PATH, SF.UPLOAD_DATE, 
+		SF.FILE_LEVEL, SF.FILE_CAPTION, SF.SCH_ID, SF.FILE_STATUS, TD.DAY_NUMBER, TS.SCH_NUMBER
+		FROM TRAVEL T
+		JOIN TRV_DAY TD ON (T.TRV_ID = TD.TRV_ID)
+		JOIN TRV_SCH TS ON (TS.DAY_ID = TD.DAY_ID)
+		JOIN SCH_FILE SF ON (TS.SCH_ID = SF.SCH_ID)
+		WHERE T.TRV_ID = #{ trvId }
+		AND SF.FILE_STATUS = 'Y'
+		ORDER BY TD.DAY_NUMBER, TS.SCH_NUMBER
+	</select>
+	
+	<!-- 마이페이지 좋아요, 구매수 카운트 구하기 -->
+	<select id="selectMyCount" resultMap="travelBoardResultSet">
+		SELECT DISTINCT M.USER_NAME, T.MEMBER_ID, LIKEY_COUNT, BUY_COUNT
+		FROM TRAVEL T
+		JOIN MEMBER M ON (M.MEMBER_ID = T.MEMBER_ID)
+		JOIN (SELECT T.MEMBER_ID, COUNT(L.LIKEY_ID) as LIKEY_COUNT
+		          FROM TRAVEL T
+		          LEFT JOIN LIKEY L ON (L.TRV_ID = T.TRV_ID)
+		          WHERE T.STATUS = 'Y'
+		          AND T.TRV_REF IS NULL
+		          GROUP BY T.MEMBER_ID) TRL ON (TRL.MEMBER_ID = T.MEMBER_ID)
+		JOIN (SELECT T.MEMBER_ID, COUNT(U.USE_POINT) as BUY_COUNT
+		          FROM TRAVEL T
+		          LEFT JOIN USE_POINT U ON (U.TRV_ID = T.TRV_ID)
+		          WHERE T.STATUS = 'Y'
+		          AND T.TRV_REF IS NULL
+		          GROUP BY T.MEMBER_ID) US ON (US.MEMBER_ID = T.MEMBER_ID)
+		WHERE T.STATUS = 'Y'
+		AND T.TRV_REF IS NULL
+		AND T.COMPLETE_DATE IS NOT NULL
+		AND M.MEMBER_ID = #{ memberId }
+	</select>
+	
+	<!-- 가계부 다운로드 -->
+	<select id="costDownload" parameterType="_int" resultMap="CostDownResultMap">
+		SELECT TRV.TRV_TITLE, M.USER_NAME, DAY.DAY_NUMBER, DAY.DAY_DATE, COST.COST_CONTENT, COST.COST_TYPE, COST.COST_AMOUNT, COST.CURRENCY
+		FROM TRV_COST COST
+		JOIN TRV_DAY DAY ON (COST.DAY_ID = DAY.DAY_ID)
+		JOIN TRAVEL TRV ON (TRV.TRV_ID = DAY.TRV_ID)
+		JOIN MEMBER M ON (M.MEMBER_ID = TRV.MEMBER_ID)
+		WHERE TRV.TRV_ID = #{trvId}
+		ORDER BY DAY.DAY_NUMBER, COST.COST_TYPE
+	</select>
+	
+</mapper>

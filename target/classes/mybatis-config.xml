@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<typeAliases>
+		<!-- 세령 -->
+			<typeAlias type="com.kh.ti.member.model.vo.Member" alias="Member"/>
+			<typeAlias type="com.kh.ti.spot.model.vo.SpotList" alias="SpotList"/>
+			<typeAlias type="com.kh.ti.spot.model.vo.Likey" alias="LikeySpot"/>
+			<typeAlias type="com.kh.ti.spot.model.vo.SpotReviews" alias="SpotReviews"/>
+			<typeAlias type="com.kh.ti.spot.model.vo.AdminSpotList" alias="AdminSpotList"/>
+		<!-- 수민 -->
+			<typeAlias type="com.kh.ti.point.model.vo.Payment" alias="Payment"/>
+			<typeAlias type="com.kh.ti.point.model.vo.UsePoint" alias="UsePoint"/>
+			<typeAlias type="com.kh.ti.point.model.vo.ReservePoint" alias="ReservePoint"/>
+			<typeAlias type="com.kh.ti.point.model.vo.Refund" alias="Refund"/>
+			<typeAlias type="com.kh.ti.point.model.vo.Proceeds" alias="Proceeds"/>
+			<typeAlias type="com.kh.ti.point.model.vo.Rebate" alias="Rebate"/>
+			<typeAlias type="com.kh.ti.point.model.vo.SearchPoint" alias="SearchPoint"/>
+	    <!-- 선우 -->
+	    	<typeAlias type="com.kh.ti.travelRequest.model.vo.TravelRequest" alias="TravelRequest"/>
+	    	<typeAlias type="com.kh.ti.travelRequest.model.vo.TravelRequestPlan" alias="TravelRequestPlan"/>
+	    	<typeAlias type="com.kh.ti.travelRequest.model.vo.PlanDay" alias="PlanDay"/>
+	    	<typeAlias type="com.kh.ti.travelRequest.model.vo.PlanPlace" alias="PlanPlace"/>
+	    	<typeAlias type="com.kh.ti.travelRequest.model.vo.Participation" alias="Participation"/>
+	    	<typeAlias type="com.kh.ti.myRequest.model.vo.MyPlan" alias="MyPlan"/>
+	    	<typeAlias type="com.kh.ti.penalty.model.vo.Penalty" alias="Penalty"/>
+	    	<typeAlias type="com.kh.ti.penalty.model.vo.PenaltyAttachment" alias="PenaltyAttachment"/>
+	    	<typeAlias type="com.kh.ti.penalty.model.vo.PenaltyType" alias="PenaltyType"/>
+	    	<typeAlias type="com.kh.ti.myRequest.model.vo.Inquiry" alias="Inquiry"/>
+	    	<typeAlias type="com.kh.ti.adminCallCenter.model.vo.Board" alias="Board"/>
+	    	<typeAlias type="com.kh.ti.adminCallCenter.model.vo.BoardAttachment" alias="BoardAttachment"/>
+	    	<typeAlias type="com.kh.ti.adminCallCenter.model.vo.Total" alias="Total"/>
+	    <!-- 민지 추가 -->
+			<typeAlias type="com.kh.ti.travel.model.vo.Travel" alias="Travel" />
+			<typeAlias type="com.kh.ti.travel.model.vo.Country" alias="Country" />
+			<typeAlias type="com.kh.ti.travel.model.vo.City" alias="City" />
+			<typeAlias type="com.kh.ti.travel.model.vo.TrvCity" alias="TrvCity" />
+			<typeAlias type="com.kh.ti.travel.model.vo.TrvDay" alias="TrvDay" />
+			<typeAlias type="com.kh.ti.travel.model.vo.Tag" alias="Tag" />
+			<typeAlias type="com.kh.ti.travel.model.vo.TrvTag" alias="TrvTag" />
+			<typeAlias type="com.kh.ti.travel.model.vo.TrvSchedule" alias="TrvSch" />
+			<typeAlias type="com.kh.ti.travel.model.vo.TrvCost" alias="TrvCost" />
+			<typeAlias type="com.kh.ti.travel.model.vo.TrvCompany" alias="TrvComp" />
+    	<!-- TravelBoard Part (예랑) -->
+			<typeAlias type="com.kh.ti.travelBoard.model.vo.TravelBoard" alias="TravelBoard"/>
+			<typeAlias type="com.kh.ti.travelBoard.model.vo.Likey" alias="Likey"/>
+			<typeAlias type="com.kh.ti.travel.model.vo.SchFile" alias="SchFile"/>
+			<typeAlias type="com.kh.ti.travelBoard.model.vo.TrvDaySchedule" alias="TrvDaySchedule"/>
+			<typeAlias type="com.kh.ti.travelBoard.model.vo.TrvBoardSch" alias="TrvBoardSch"/>
+			<typeAlias type="com.kh.ti.travelBoard.model.vo.TourReview" alias="TourReview"/>
+			<typeAlias type="com.kh.ti.travelBoard.model.vo.TravelCost" alias="TravelCost"/>
+			<typeAlias type="com.kh.ti.travelBoard.model.vo.Gallary" alias="Gallary"/>
+		  <!-- Statistics Part (예랑) -->
+			<typeAlias type="com.kh.ti.statistics.model.vo.UserStatistics" alias="UserStatistics"/>
+			<typeAlias type="com.kh.ti.statistics.model.vo.TravelStatistics" alias="TravelStatistics"/>
+			<typeAlias type="com.kh.ti.statistics.model.vo.RevenueStatistics" alias="RevenueStatistics"/>
+
+	</typeAliases>
+	<mappers>
+		<!-- 세령 -->
+			<mapper resource="mappers/member-mapper.xml"/>
+			<mapper resource="mappers/spot-mapper.xml"/>
+		<!-- 수민 -->
+			<mapper resource="mappers/point-mapper.xml"/>
+	    <!-- 선우 -->
+	    	<mapper resource="mappers/travelRequest-mapper.xml"/>
+	    	<mapper resource="mappers/penalty-mapper.xml"/>
+	    	<mapper resource="mappers/inquiry-mapper.xml"/>
+	    	<mapper resource="mappers/callCenter-mapper.xml"/>
+	    	<mapper resource="mappers/total-mapper.xml"/>
+	    <!-- 민지 추가 -->
+			<mapper resource="mappers/travel-mapper.xml" />
+    	<!-- TravelBoard Part (예랑) -->
+			<mapper resource="mappers/travelBoard-mapper.xml"/>
+			<mapper resource="mappers/statistics-mapper.xml"/>
+		<!-- 지원  채팅  -->
+			<mapper resource="mappers/chatting-mapper.xml"/>
+	</mappers>
+	
+	
+</configuration>
+
