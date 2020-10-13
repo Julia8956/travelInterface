@@ -124,7 +124,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version><!-- junit 버전 수정 -->
+			<version>4.13.1</version><!-- junit 버전 수정 -->
 			<scope>test</scope>
 		</dependency>				
 		
